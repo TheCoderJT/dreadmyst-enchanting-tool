@@ -289,49 +289,65 @@ export default function Home() {
         </div>
 
         <footer className={styles.footer}>
-          <div className={styles.footerSection}>
-            <p className={styles.footerText}>
-              A tool by{' '}
-              <a
-                href="https://isitp2w.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.footerLink}
-              >
-                IsItP2W.com
-              </a>
-            </p>
-            <p className={styles.footerSubtext}>
-              <a
-                href="https://isitp2w.com/games/dreadmyst"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.footerLink}
-              >
-                View Dreadmyst on IsItP2W →
-              </a>
-            </p>
+          <div className={styles.footerGrid}>
+            <div className={styles.footerColumn}>
+              <h4 className={styles.footerHeading}>Built by IsItP2W</h4>
+              <p className={styles.footerText}>
+                Helping gamers make informed decisions about game monetization.
+              </p>
+              <div className={styles.footerLinks}>
+                <a
+                  href="https://isitp2w.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.footerLink}
+                >
+                  IsItP2W.com
+                </a>
+                <a
+                  href="https://isitp2w.com/games/dreadmyst"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.footerLink}
+                >
+                  Dreadmyst on IsItP2W
+                </a>
+              </div>
+              <div className={styles.footerEmbed}>
+                <iframe
+                  src="https://isitp2w.com/api/embed/dreadmyst"
+                  width="100%"
+                  height="150"
+                  frameBorder="0"
+                  title="Dreadmyst Official P2W Score"
+                  className={styles.embedFrame}
+                />
+              </div>
+            </div>
+
+            <div className={styles.footerColumn}>
+              <h4 className={styles.footerHeading}>Data Attribution</h4>
+              <p className={styles.footerText}>
+                Enchanting formulas provided by <strong>Sith</strong>
+              </p>
+              <div className={styles.footerLinks}>
+                <a
+                  href="https://docs.google.com/spreadsheets/d/1GxuInbx8yLYp4mnmaHgCMmRkSamrE_cBCYlzvg1pCqM/edit?usp=sharing"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.footerLink}
+                >
+                  Dreadmyst Info Spreadsheet
+                </a>
+              </div>
+              <p className={styles.footerNote}>
+                Check the spreadsheet for more game info including dungeons, classes, spells, stats, and item affixes!
+              </p>
+            </div>
           </div>
 
-          <div className={styles.footerDivider}></div>
-
-          <div className={styles.footerSection}>
-            <p className={styles.footerAttribution}>
-              Enchanting data by <strong>Sith</strong>
-            </p>
-            <p className={styles.footerSubtext}>
-              <a
-                href="https://docs.google.com/spreadsheets/d/1GxuInbx8yLYp4mnmaHgCMmRkSamrE_cBCYlzvg1pCqM/edit?usp=sharing"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.footerLink}
-              >
-                View the Dreadmyst Info Spreadsheet →
-              </a>
-            </p>
-            <p className={styles.footerNote}>
-              Check the spreadsheet for more game info!
-            </p>
+          <div className={styles.footerBottom}>
+            <p>© 2026 IsItP2W.com — Jordan D Turner (JT Digital Systems)</p>
           </div>
         </footer>
       </div>
