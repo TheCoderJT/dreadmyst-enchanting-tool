@@ -328,7 +328,7 @@ export default function Home() {
             <div className={styles.footerColumn}>
               <h4 className={styles.footerHeading}>Data Attribution</h4>
               <p className={styles.footerText}>
-                Enchanting formulas provided by <strong>Sith</strong>
+                Enchanting formulas provided by <strong>@sithadmin</strong>
               </p>
               <div className={styles.footerLinks}>
                 <a
