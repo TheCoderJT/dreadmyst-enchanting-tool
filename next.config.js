@@ -4,8 +4,8 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // Uncomment and set basePath if deploying to a subdirectory (e.g., /dreadmyst-enchanting-tool)
-  // basePath: '/dreadmyst-enchanting-tool',
+  basePath: '/dreadmyst-enchanting-tool',
+  assetPrefix: '/dreadmyst-enchanting-tool/',
 }
 
 module.exports = nextConfig
