@@ -1,0 +1,306 @@
+.container {
+  margin-top: 1rem;
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.subtitle {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.disclaimer {
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+  margin-bottom: 1rem;
+  padding: 0.4rem 0.6rem;
+  background: rgba(255, 193, 7, 0.1);
+  border-left: 3px solid #ffc107;
+  border-radius: var(--radius-sm);
+  line-height: 1.4;
+}
+
+.strategiesGrid {
+  display: grid;
+  gap: 1rem;
+}
+
+.strategyCard {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  padding: 0.875rem;
+  transition: border-color var(--transition-normal), transform var(--transition-normal);
+}
+
+.strategyCard:hover {
+  transform: translateY(-2px);
+}
+
+.strategyCard.low {
+  border-left: 3px solid var(--risk-safe);
+}
+
+.strategyCard.low:hover {
+  border-color: var(--risk-safe);
+}
+
+.strategyCard.medium {
+  border-left: 3px solid var(--risk-moderate);
+}
+
+.strategyCard.medium:hover {
+  border-color: var(--risk-moderate);
+}
+
+.strategyCard.high {
+  border-left: 3px solid var(--risk-dangerous);
+}
+
+.strategyCard.high:hover {
+  border-color: var(--risk-dangerous);
+}
+
+.strategyHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.strategyName {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.riskBadge {
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 0.2rem 0.4rem;
+  border-radius: var(--radius-sm);
+  background: var(--bg-secondary);
+}
+
+.low .riskBadge {
+  color: var(--risk-safe);
+}
+
+.medium .riskBadge {
+  color: var(--risk-moderate);
+}
+
+.high .riskBadge {
+  color: var(--risk-dangerous);
+}
+
+.strategyDescription {
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+  display: none;
+}
+
+.totalCost {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  margin-bottom: 0.75rem;
+}
+
+.totalLabel {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+.totalValue {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.stepsContainer {
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.stepsTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.7rem;
+}
+
+.stepsTable th,
+.stepsTable td {
+  padding: 0.35rem 0.25rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.stepsTable th {
+  font-size: 0.55rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  position: sticky;
+  top: 0;
+  background: var(--bg-tertiary);
+}
+
+.stepsTable tbody tr:hover {
+  background: var(--bg-hover);
+}
+
+.orbIndicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.orbDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+@media (min-width: 480px) {
+  .title {
+    font-size: 1.1rem;
+  }
+
+  .subtitle {
+    font-size: 0.8rem;
+  }
+
+  .disclaimer {
+    font-size: 0.75rem;
+  }
+
+  .strategyCard {
+    padding: 1rem;
+  }
+
+  .strategyName {
+    font-size: 0.95rem;
+  }
+
+  .strategyDescription {
+    display: block;
+  }
+
+  .stepsTable {
+    font-size: 0.75rem;
+  }
+
+  .stepsTable th {
+    font-size: 0.6rem;
+  }
+
+  .orbDot {
+    width: 7px;
+    height: 7px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    margin-top: 1.5rem;
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+  }
+
+  .disclaimer {
+    font-size: 0.8rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .strategiesGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .strategyCard {
+    padding: 1.25rem;
+  }
+
+  .strategyName {
+    font-size: 1rem;
+  }
+
+  .riskBadge {
+    font-size: 0.7rem;
+  }
+
+  .strategyDescription {
+    font-size: 0.8rem;
+  }
+
+  .totalCost {
+    padding: 0.75rem 1rem;
+  }
+
+  .totalLabel {
+    font-size: 0.85rem;
+  }
+
+  .totalValue {
+    font-size: 1.25rem;
+  }
+
+  .stepsContainer {
+    max-height: 200px;
+  }
+
+  .stepsTable {
+    font-size: 0.8rem;
+  }
+
+  .stepsTable th,
+  .stepsTable td {
+    padding: 0.5rem;
+  }
+
+  .stepsTable th {
+    font-size: 0.65rem;
+  }
+
+  .orbIndicator {
+    gap: 0.35rem;
+  }
+
+  .orbDot {
+    width: 8px;
+    height: 8px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .stepsContainer {
+    max-height: 300px;
+  }
+}
