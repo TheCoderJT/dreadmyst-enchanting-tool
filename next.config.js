@@ -1,11 +1,13 @@
 /** @type {import('next').NextConfig} */
+const isProd = process.env.NODE_ENV === 'production';
+
 const nextConfig = {
   output: 'export',
   images: {
     unoptimized: true,
   },
-  basePath: '/dreadmyst-enchanting-tool',
-  assetPrefix: '/dreadmyst-enchanting-tool/',
+  basePath: isProd ? '/dreadmyst-enchanting-tool' : '',
+  assetPrefix: isProd ? '/dreadmyst-enchanting-tool/' : '',
 }
 
 module.exports = nextConfig

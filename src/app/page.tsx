@@ -289,38 +289,50 @@ export default function Home() {
         </div>
 
         <footer className={styles.footer}>
-          <p className={styles.footerText}>
-            A tool by{' '}
-            <a
-              href="https://isitp2w.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.footerLink}
-            >
-              IsItP2W.com
-            </a>
-          </p>
-          <p className={styles.footerSubtext}>
-            <a
-              href="https://isitp2w.com/games/dreadmyst"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.footerLink}
-            >
-              View Dreadmyst on IsItP2W →
-            </a>
-          </p>
-          <p className={styles.footerCredit}>
-            Enchanting formulas based on{' '}
-            <a
-              href="https://docs.google.com/spreadsheets/d/1GxuInbx8yLYp4mnmaHgCMmRkSamrE_cBCYlzvg1pCqM/edit?usp=sharing"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.footerLink}
-            >
-              community spreadsheet
-            </a>
-          </p>
+          <div className={styles.footerSection}>
+            <p className={styles.footerText}>
+              A tool by{' '}
+              <a
+                href="https://isitp2w.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.footerLink}
+              >
+                IsItP2W.com
+              </a>
+            </p>
+            <p className={styles.footerSubtext}>
+              <a
+                href="https://isitp2w.com/games/dreadmyst"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.footerLink}
+              >
+                View Dreadmyst on IsItP2W →
+              </a>
+            </p>
+          </div>
+
+          <div className={styles.footerDivider}></div>
+
+          <div className={styles.footerSection}>
+            <p className={styles.footerAttribution}>
+              Enchanting data by <strong>Sith</strong>
+            </p>
+            <p className={styles.footerSubtext}>
+              <a
+                href="https://docs.google.com/spreadsheets/d/1GxuInbx8yLYp4mnmaHgCMmRkSamrE_cBCYlzvg1pCqM/edit?usp=sharing"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.footerLink}
+              >
+                View the Dreadmyst Info Spreadsheet →
+              </a>
+            </p>
+            <p className={styles.footerNote}>
+              Check the spreadsheet for more game info!
+            </p>
+          </div>
         </footer>
       </div>
     </main>

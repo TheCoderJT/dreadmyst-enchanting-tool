@@ -48,7 +48,8 @@ This project is configured for GitHub Pages deployment. Push to `main` branch to
 
 ## Credits
 
-- Enchanting formulas based on [community spreadsheet](https://docs.google.com/spreadsheets/d/1GxuInbx8yLYp4mnmaHgCMmRkSamrE_cBCYlzvg1pCqM/edit?usp=sharing)
+- **Enchanting data by Sith** — [Dreadmyst Info Spreadsheet](https://docs.google.com/spreadsheets/d/1GxuInbx8yLYp4mnmaHgCMmRkSamrE_cBCYlzvg1pCqM/edit?usp=sharing)
+  - Check the spreadsheet for more game info!
 - Built for the Dreadmyst community
 
 ## About the Author
