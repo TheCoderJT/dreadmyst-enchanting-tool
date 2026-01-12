@@ -261,8 +261,8 @@
 
 .statsGrid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.75rem;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
   margin-bottom: 1rem;
 }
 
@@ -284,7 +284,7 @@
 }
 
 .statValue {
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: var(--text-primary);
 }
@@ -307,7 +307,7 @@
 }
 
 .bandValue {
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--brand-primary);
 }
@@ -336,9 +336,9 @@
 .histogramBars {
   display: flex;
   align-items: flex-end;
-  gap: 4px;
-  height: 120px;
-  padding-top: 20px;
+  gap: 2px;
+  height: 100px;
+  padding-top: 24px;
 }
 
 .barContainer {
@@ -352,9 +352,10 @@
 
 .barCount {
   position: absolute;
-  top: -18px;
-  font-size: 0.55rem;
-  color: var(--text-secondary);
+  top: -20px;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: var(--text-primary);
   white-space: nowrap;
 }
 
@@ -372,7 +373,7 @@
 }
 
 .barLabel {
-  font-size: 0.6rem;
+  font-size: 0.5rem;
   color: var(--text-tertiary);
   margin-top: 0.25rem;
   white-space: nowrap;
@@ -413,17 +414,17 @@
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  min-width: 400px;
+  min-width: 320px;
 }
 
 .simLevelStatsHeader {
   display: grid;
-  grid-template-columns: 80px repeat(4, 1fr);
-  gap: 0.5rem;
-  padding: 0.5rem;
+  grid-template-columns: 65px repeat(4, 1fr);
+  gap: 0.25rem;
+  padding: 0.5rem 0.25rem;
   background: var(--bg-primary);
   border-radius: var(--radius-sm);
-  font-size: 0.7rem;
+  font-size: 0.55rem;
   font-weight: 600;
   color: var(--text-tertiary);
   text-transform: uppercase;
@@ -431,10 +432,10 @@
 
 .simLevelStatsRow {
   display: grid;
-  grid-template-columns: 80px repeat(4, 1fr);
-  gap: 0.5rem;
-  padding: 0.5rem;
-  font-size: 0.8rem;
+  grid-template-columns: 65px repeat(4, 1fr);
+  gap: 0.25rem;
+  padding: 0.5rem 0.25rem;
+  font-size: 0.7rem;
   color: var(--text-secondary);
   border-bottom: 1px solid var(--border-primary);
 }
@@ -454,6 +455,36 @@
 
 .failCount {
   color: #ef4444;
+}
+
+@media (min-width: 480px) {
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .statValue {
+    font-size: 1rem;
+  }
+
+  .barCount {
+    font-size: 0.7rem;
+  }
+
+  .barLabel {
+    font-size: 0.6rem;
+  }
+
+  .simLevelStatsHeader {
+    font-size: 0.65rem;
+    grid-template-columns: 75px repeat(4, 1fr);
+    gap: 0.5rem;
+  }
+
+  .simLevelStatsRow {
+    font-size: 0.75rem;
+    grid-template-columns: 75px repeat(4, 1fr);
+    gap: 0.5rem;
+  }
 }
 
 @media (min-width: 768px) {
@@ -477,6 +508,39 @@
   .chanceValue {
     font-size: 2.5rem;
   }
+
+  .statsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .bandValue {
+    font-size: 1.25rem;
+  }
+
+  .histogramBars {
+    height: 120px;
+    gap: 4px;
+    padding-top: 28px;
+  }
+
+  .barCount {
+    font-size: 0.75rem;
+    top: -22px;
+  }
+
+  .barLabel {
+    font-size: 0.65rem;
+  }
+
+  .simLevelStatsHeader {
+    font-size: 0.7rem;
+    grid-template-columns: 80px repeat(4, 1fr);
+  }
+
+  .simLevelStatsRow {
+    font-size: 0.8rem;
+    grid-template-columns: 80px repeat(4, 1fr);
+  }
 }
 
 @media (min-width: 1024px) {
@@ -489,10 +553,6 @@
     gap: 2rem;
   }
 
-  .statsGrid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
   .probabilityBand {
     flex-direction: row;
     justify-content: center;
@@ -500,7 +560,7 @@
   }
 
   .histogramBars {
-    height: 120px;
+    height: 140px;
   }
 
   .barLabel {

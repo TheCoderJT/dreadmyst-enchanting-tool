@@ -55,7 +55,7 @@
   border-radius: var(--radius-md);
   list-style: none;
   padding: 0.25rem;
-  z-index: 100;
+  z-index: 1000;
   box-shadow: var(--shadow-lg);
   max-height: 250px;
   overflow-y: auto;
