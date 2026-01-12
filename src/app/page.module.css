@@ -30,6 +30,51 @@
   font-size: 0.8rem;
 }
 
+.howToUse {
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.howToUseTitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.75rem 0;
+}
+
+.howToUseSteps {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.howToUseSteps li {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.howToUseSteps li strong {
+  color: var(--brand-primary);
+}
+
+@media (min-width: 768px) {
+  .howToUse {
+    padding: 1.25rem 1.5rem;
+  }
+
+  .howToUseSteps {
+    flex-direction: row;
+    gap: 2rem;
+    padding-left: 1.5rem;
+  }
+}
+
 .grid {
   display: grid;
   gap: 1rem;

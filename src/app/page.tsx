@@ -77,6 +77,15 @@ export default function Home() {
           </p>
         </header>
 
+        <div className={styles.howToUse}>
+          <h3 className={styles.howToUseTitle}>How to Use Enchanting Orbs</h3>
+          <ol className={styles.howToUseSteps}>
+            <li><strong>Right-click</strong> the orb in your inventory</li>
+            <li><strong>Click</strong> the matching item type for that orb</li>
+            <li><strong>Repeat</strong> until you reach your desired enchant level</li>
+          </ol>
+        </div>
+
         <div className={styles.grid}>
           {/* Input Card */}
           <div className={styles.card}>
