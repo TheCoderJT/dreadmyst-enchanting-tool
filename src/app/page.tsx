@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import styles from './page.module.css';
 import StrategyComparison from '@/components/StrategyComparison';
 import SimulationResults from '@/components/SimulationResults';
+import TabNavigation from '@/components/TabNavigation';
 import ColorDropdown from '@/components/ColorDropdown';
 import {
   ItemQuality,
@@ -20,7 +21,13 @@ import {
   analyzeEnchantPath,
 } from '@/lib/enchant-engine';
 
+const TABS = [
+  { id: 'calculator', label: 'Calculator', icon: '📊' },
+  { id: 'simulator', label: 'Simulator', icon: '🎲' },
+];
+
 export default function Home() {
+  const [activeTab, setActiveTab] = useState('calculator');
   const [itemQuality, setItemQuality] = useState<ItemQuality>(ItemQuality.Godly);
   const [orbQuality, setOrbQuality] = useState<OrbQuality>(OrbQuality.Divine);
   const [currentLevel, setCurrentLevel] = useState<number>(0);
@@ -71,24 +78,32 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
+      <header className={styles.header}>
+        <h1 className={styles.title}>Dreadmyst Enchanting Calculator</h1>
+        <p className={styles.subtitle}>
+          Calculate success rates and optimal orb strategies
+        </p>
+      </header>
+
+      <TabNavigation
+        tabs={TABS}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+      />
+
       <div className={styles.container}>
-        <header className={styles.header}>
-          <h1 className={styles.title}>Dreadmyst Enchanting Calculator</h1>
-          <p className={styles.subtitle}>
-            Calculate success rates and optimal orb strategies
-          </p>
-        </header>
+        {activeTab === 'calculator' && (
+          <>
+            <div className={styles.howToUse}>
+              <h3 className={styles.howToUseTitle}>How to Use Enchanting Orbs</h3>
+              <ol className={styles.howToUseSteps}>
+                <li><strong>Right-click</strong> the orb in your inventory</li>
+                <li><strong>Click</strong> the matching item type for that orb</li>
+                <li><strong>Repeat</strong> until you reach your desired enchant level</li>
+              </ol>
+            </div>
 
-        <div className={styles.howToUse}>
-          <h3 className={styles.howToUseTitle}>How to Use Enchanting Orbs</h3>
-          <ol className={styles.howToUseSteps}>
-            <li><strong>Right-click</strong> the orb in your inventory</li>
-            <li><strong>Click</strong> the matching item type for that orb</li>
-            <li><strong>Repeat</strong> until you reach your desired enchant level</li>
-          </ol>
-        </div>
-
-        <div className={styles.grid}>
+            <div className={styles.grid}>
           {/* Input Card */}
           <div className={styles.card}>
             <h2 className={styles.cardTitle}>Item Configuration</h2>
@@ -287,19 +302,23 @@ export default function Home() {
               currentLevel={currentLevel}
             />
           </div>
+        </div>
+          </>
+        )}
 
-          {/* Monte Carlo Simulation */}
-          <div className={`${styles.card} ${styles.fullWidth}`}>
+        {activeTab === 'simulator' && (
+          <div className={styles.simulatorTab}>
             <SimulationResults
               itemQuality={itemQuality}
               orbQuality={orbQuality}
               currentLevel={currentLevel}
             />
           </div>
-        </div>
+        )}
+      </div>
 
-        <footer className={styles.footer}>
-          <div className={styles.footerGrid}>
+      <footer className={styles.footer}>
+        <div className={styles.footerGrid}>
             <div className={styles.footerColumn}>
               <h4 className={styles.footerHeading}>Built by IsItP2W</h4>
               <p className={styles.footerText}>
@@ -356,11 +375,15 @@ export default function Home() {
             </div>
           </div>
 
-          <div className={styles.footerBottom}>
-            <p>© 2026 IsItP2W.com — Jordan D Turner (JT Digital Systems)</p>
-          </div>
-        </footer>
-      </div>
+        <div className={styles.footerDisclaimer}>
+          <p>Not affiliated with the official Dreadmyst team.</p>
+          <p>Issues? Contact <strong>@TheNamesJT</strong> on Discord</p>
+        </div>
+
+        <div className={styles.footerBottom}>
+          <p>© 2026 IsItP2W.com — Jordan D Turner (JT Digital Systems)</p>
+        </div>
+      </footer>
     </main>
   );
 }

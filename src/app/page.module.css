@@ -1,17 +1,28 @@
 .main {
   min-height: 100vh;
-  padding: 1rem 0.75rem;
   background: var(--bg-primary);
+  display: flex;
+  flex-direction: column;
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
+  padding: 1rem 0.75rem;
+  flex: 1;
 }
 
 .header {
   text-align: center;
-  margin-bottom: 2rem;
+  padding: 1rem 0.75rem 0.5rem;
+  background: var(--bg-primary);
+}
+
+.simulatorTab {
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  padding: 0;
 }
 
 .title {
@@ -35,6 +46,7 @@
   border: 1px solid var(--border-primary);
   border-radius: var(--radius-lg);
   padding: 1rem 1.25rem;
+  margin-top: 1.5rem;
   margin-bottom: 1.5rem;
 }
 
@@ -345,16 +357,22 @@
 
 .footer {
   margin-top: 3rem;
-  padding: 2rem 1.5rem;
-  background: linear-gradient(180deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+  padding: 2rem 1rem;
+  background: var(--bg-primary);
   border-top: 1px solid var(--border-primary);
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.footerInner {
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .footerGrid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .footerColumn {
@@ -438,11 +456,36 @@
   border-left: 3px solid var(--brand-primary);
 }
 
-.footerBottom {
+.footerDisclaimer {
   margin-top: 2rem;
+  padding: 1rem;
+  text-align: center;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-primary);
+}
+
+.footerDisclaimer p {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin: 0.25rem 0;
+}
+
+.footerDisclaimer strong {
+  color: var(--brand-primary);
+}
+
+.footerBottom {
+  margin-top: 1.5rem;
   padding-top: 1.5rem;
   border-top: 1px solid var(--border-primary);
   text-align: center;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .footerBottom p {
@@ -451,18 +494,43 @@
   margin: 0;
 }
 
+@media (min-width: 640px) {
+  .footer {
+    padding: 2rem 1.5rem;
+  }
+
+  .footerGrid {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .footerColumn {
+    max-width: 45%;
+  }
+}
+
 @media (min-width: 768px) {
   .footer {
     padding: 2.5rem 2rem;
   }
 
   .footerGrid {
-    grid-template-columns: 1fr 1fr;
     gap: 3rem;
   }
 
   .footerHeading {
     font-size: 1.1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .footer {
+    padding: 3rem 2rem;
+  }
+
+  .footerGrid {
+    gap: 4rem;
   }
 }
 

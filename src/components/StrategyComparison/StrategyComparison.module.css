@@ -237,6 +237,70 @@
   }
 
   .strategiesGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .strategyCard {
+    padding: 1rem;
+  }
+
+  .strategyName {
+    font-size: 0.95rem;
+  }
+
+  .riskBadge {
+    font-size: 0.65rem;
+  }
+
+  .strategyDescription {
+    font-size: 0.75rem;
+  }
+
+  .totalCost {
+    padding: 0.6rem 0.8rem;
+  }
+
+  .totalLabel {
+    font-size: 0.8rem;
+  }
+
+  .totalValue {
+    font-size: 1.1rem;
+  }
+
+  .stepsContainer {
+    max-height: 180px;
+  }
+
+  .stepsTable {
+    font-size: 0.75rem;
+  }
+
+  .stepsTable th,
+  .stepsTable td {
+    padding: 0.4rem;
+  }
+
+  .stepsTable th {
+    font-size: 0.6rem;
+  }
+
+  .orbIndicator {
+    gap: 0.3rem;
+  }
+
+  .orbDot {
+    width: 7px;
+    height: 7px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .strategiesGrid {
     grid-template-columns: repeat(3, 1fr);
   }
 
@@ -269,7 +333,7 @@
   }
 
   .stepsContainer {
-    max-height: 200px;
+    max-height: 300px;
   }
 
   .stepsTable {
@@ -292,15 +356,5 @@
   .orbDot {
     width: 8px;
     height: 8px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .title {
-    font-size: 1.5rem;
-  }
-
-  .stepsContainer {
-    max-height: 300px;
   }
 }

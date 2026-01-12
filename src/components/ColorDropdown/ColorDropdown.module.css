@@ -1,5 +1,4 @@
 .container {
-  position: relative;
 }
 
 .label {
@@ -7,6 +6,10 @@
   font-size: 0.85rem;
   color: var(--text-secondary);
   margin-bottom: 0.5rem;
+}
+
+.triggerWrapper {
+  position: relative;
 }
 
 .trigger {

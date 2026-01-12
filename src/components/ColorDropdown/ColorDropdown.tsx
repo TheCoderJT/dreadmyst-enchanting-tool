@@ -46,22 +46,23 @@ export default function ColorDropdown({
   return (
     <div className={styles.container} ref={dropdownRef}>
       <label className={styles.label}>{label}</label>
-      <button
-        type="button"
-        className={styles.trigger}
-        onClick={() => setIsOpen(!isOpen)}
-        aria-expanded={isOpen}
-      >
-        <span style={{ color: selectedOption?.color }}>
-          {selectedOption?.label}
-        </span>
-        <span className={`${styles.arrow} ${isOpen ? styles.arrowOpen : ''}`}>
-          ▼
-        </span>
-      </button>
+      <div className={styles.triggerWrapper}>
+        <button
+          type="button"
+          className={styles.trigger}
+          onClick={() => setIsOpen(!isOpen)}
+          aria-expanded={isOpen}
+        >
+          <span style={{ color: selectedOption?.color }}>
+            {selectedOption?.label}
+          </span>
+          <span className={`${styles.arrow} ${isOpen ? styles.arrowOpen : ''}`}>
+            ▼
+          </span>
+        </button>
 
-      {isOpen && (
-        <ul className={styles.dropdown}>
+        {isOpen && (
+          <ul className={styles.dropdown}>
           {options.map((option) => (
             <li key={option.value}>
               <button
@@ -74,8 +75,9 @@ export default function ColorDropdown({
               </button>
             </li>
           ))}
-        </ul>
-      )}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }
