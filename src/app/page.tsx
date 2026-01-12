@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import styles from './page.module.css';
 import StrategyComparison from '@/components/StrategyComparison';
+import SimulationResults from '@/components/SimulationResults';
 import ColorDropdown from '@/components/ColorDropdown';
 import {
   ItemQuality,
@@ -283,6 +284,15 @@ export default function Home() {
           <div className={`${styles.card} ${styles.fullWidth}`}>
             <StrategyComparison
               itemQuality={itemQuality}
+              currentLevel={currentLevel}
+            />
+          </div>
+
+          {/* Monte Carlo Simulation */}
+          <div className={`${styles.card} ${styles.fullWidth}`}>
+            <SimulationResults
+              itemQuality={itemQuality}
+              orbQuality={orbQuality}
               currentLevel={currentLevel}
             />
           </div>

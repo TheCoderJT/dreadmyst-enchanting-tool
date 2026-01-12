@@ -306,3 +306,206 @@ export function analyzeEnchantPath(
 
   return steps;
 }
+
+/**
+ * Monte Carlo Simulation Types
+ */
+export interface SimulationResult {
+  orbsUsed: number;
+  attempts: number;
+}
+
+export interface LevelStats {
+  level: number;
+  attempts: number;
+  successes: number;
+  failures: number;
+}
+
+export interface SimulationStats {
+  runs: number;
+  mean: number;
+  median: number;
+  min: number;
+  max: number;
+  p10: number;
+  p25: number;
+  p75: number;
+  p80: number;
+  p90: number;
+  p95: number;
+  histogram: { bucket: number; count: number }[];
+  levelStats: LevelStats[];
+}
+
+/**
+ * Simulate a single enchanting run from startLevel to targetLevel
+ * Uses random walk model: success +1, failure -1 (min 0)
+ */
+export function simulateSingleRun(
+  startLevel: number,
+  targetLevel: number,
+  itemQuality: ItemQuality,
+  orbQuality: OrbQuality
+): SimulationResult {
+  let currentLevel = startLevel;
+  let orbsUsed = 0;
+  let attempts = 0;
+  const maxAttempts = 10000000; // Safety limit (10M)
+
+  while (currentLevel < targetLevel && attempts < maxAttempts) {
+    attempts++;
+    orbsUsed++;
+    
+    const successRate = enchantSuccessRate(currentLevel, itemQuality, orbQuality) / 100;
+    
+    if (Math.random() < successRate) {
+      currentLevel++;
+    } else if (currentLevel > 0) {
+      currentLevel--;
+    }
+  }
+
+  return { orbsUsed, attempts };
+}
+
+/**
+ * Check if a simulation is practical (won't take forever)
+ * Returns estimated average orbs - if too high, simulation is impractical
+ */
+export function isSimulationPractical(
+  startLevel: number,
+  targetLevel: number,
+  itemQuality: ItemQuality,
+  orbQuality: OrbQuality
+): { practical: boolean; estimatedOrbs: number; warning?: string } {
+  const estimatedOrbs = totalExpectedOrbsToMax(startLevel, itemQuality, orbQuality);
+  
+  if (estimatedOrbs > 1000000) {
+    return {
+      practical: false,
+      estimatedOrbs,
+      warning: 'This combination would require millions of orbs on average. Consider using higher quality orbs.',
+    };
+  }
+  
+  if (estimatedOrbs > 10000) {
+    return {
+      practical: true,
+      estimatedOrbs,
+      warning: 'This combination requires many orbs. Simulation may take a moment.',
+    };
+  }
+  
+  return { practical: true, estimatedOrbs };
+}
+
+/**
+ * Run Monte Carlo simulation with specified number of runs
+ * Tracks successes/failures at each enchant level
+ */
+export function runSimulation(
+  startLevel: number,
+  targetLevel: number,
+  itemQuality: ItemQuality,
+  orbQuality: OrbQuality,
+  numRuns: number = 10000
+): SimulationStats {
+  const results: number[] = [];
+  
+  // Track successes and failures at each level
+  const levelStatsMap = new Map<number, { attempts: number; successes: number; failures: number }>();
+  for (let level = 0; level < targetLevel; level++) {
+    levelStatsMap.set(level, { attempts: 0, successes: 0, failures: 0 });
+  }
+
+  for (let i = 0; i < numRuns; i++) {
+    let currentLevel = startLevel;
+    let orbsUsed = 0;
+    let attempts = 0;
+    const maxAttempts = 10000000;
+
+    while (currentLevel < targetLevel && attempts < maxAttempts) {
+      attempts++;
+      orbsUsed++;
+      
+      const levelData = levelStatsMap.get(currentLevel);
+      if (levelData) {
+        levelData.attempts++;
+      }
+      
+      const successRate = enchantSuccessRate(currentLevel, itemQuality, orbQuality) / 100;
+      
+      if (Math.random() < successRate) {
+        if (levelData) levelData.successes++;
+        currentLevel++;
+      } else {
+        if (levelData) levelData.failures++;
+        if (currentLevel > 0) {
+          currentLevel--;
+        }
+      }
+    }
+    
+    results.push(orbsUsed);
+  }
+
+  // Sort for percentile calculations
+  results.sort((a, b) => a - b);
+
+  const sum = results.reduce((acc, val) => acc + val, 0);
+  const mean = sum / numRuns;
+  const median = results[Math.floor(numRuns / 2)];
+  const min = results[0];
+  const max = results[numRuns - 1];
+
+  // Percentiles
+  const p10 = results[Math.floor(numRuns * 0.1)];
+  const p25 = results[Math.floor(numRuns * 0.25)];
+  const p75 = results[Math.floor(numRuns * 0.75)];
+  const p80 = results[Math.floor(numRuns * 0.8)];
+  const p90 = results[Math.floor(numRuns * 0.9)];
+  const p95 = results[Math.floor(numRuns * 0.95)];
+
+  // Build histogram (10 buckets)
+  const bucketCount = 10;
+  const bucketSize = Math.ceil((max - min + 1) / bucketCount);
+  const histogram: { bucket: number; count: number }[] = [];
+  
+  for (let i = 0; i < bucketCount; i++) {
+    const bucketStart = min + i * bucketSize;
+    const bucketEnd = bucketStart + bucketSize;
+    const count = results.filter(v => v >= bucketStart && v < bucketEnd).length;
+    histogram.push({ bucket: bucketStart, count });
+  }
+
+  // Convert level stats map to array
+  const levelStats: LevelStats[] = [];
+  for (let level = startLevel; level < targetLevel; level++) {
+    const data = levelStatsMap.get(level);
+    if (data) {
+      levelStats.push({
+        level,
+        attempts: data.attempts,
+        successes: data.successes,
+        failures: data.failures,
+      });
+    }
+  }
+
+  return {
+    runs: numRuns,
+    mean,
+    median,
+    min,
+    max,
+    p10,
+    p25,
+    p75,
+    p80,
+    p90,
+    p95,
+    histogram,
+    levelStats,
+  };
+}

@@ -1,0 +1,509 @@
+.container {
+  padding: 1rem;
+}
+
+.title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.25rem 0;
+}
+
+.subtitle {
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+  margin: 0 0 1rem 0;
+}
+
+.maxedMessage {
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.warningBox {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  text-align: center;
+}
+
+.warningTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ef4444;
+  margin: 0 0 0.5rem 0;
+}
+
+.warningText {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin: 0 0 0.75rem 0;
+}
+
+.warningEstimate {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.cautionBox {
+  background: rgba(234, 179, 8, 0.1);
+  border: 1px solid rgba(234, 179, 8, 0.5);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.cautionBox p {
+  font-size: 0.8rem;
+  color: #eab308;
+  margin: 0;
+}
+
+.simControls {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-primary);
+}
+
+.orbsInputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.orbsInputLabel {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.orbsInput {
+  padding: 0.75rem 1rem;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  transition: border-color var(--transition-fast);
+}
+
+.orbsInput:hover {
+  border-color: var(--border-hover);
+}
+
+.orbsInput:focus {
+  outline: none;
+  border-color: var(--brand-primary);
+}
+
+.orbsInput::placeholder {
+  color: var(--text-tertiary);
+}
+
+.inputNote {
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+  font-style: italic;
+}
+
+.orbLimitResult {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.15));
+  border: 1px solid var(--brand-primary);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.orbLimitTitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.75rem 0;
+}
+
+.orbLimitChance {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 0;
+}
+
+.chanceValue {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.chanceGood {
+  color: #22c55e;
+}
+
+.chanceDecent {
+  color: #eab308;
+}
+
+.chanceBad {
+  color: #ef4444;
+}
+
+.chanceLabel {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.orbLimitAdvice {
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+  margin: 0.75rem 0 0 0;
+}
+
+.simInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.ratesTable {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.ratesTitle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.75rem 0;
+}
+
+.ratesGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.rateRow {
+  display: grid;
+  grid-template-columns: 70px 1fr 50px;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.rateLevel {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-family: monospace;
+}
+
+.rateBarContainer {
+  display: flex;
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--bg-primary);
+}
+
+.rateBarSuccess {
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  transition: width var(--transition-fast);
+}
+
+.rateBarFail {
+  background: linear-gradient(90deg, #ef4444, #dc2626);
+  transition: width var(--transition-fast);
+}
+
+.ratePercent {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: right;
+}
+
+.runButton {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  background: var(--brand-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.runButton:hover:not(:disabled) {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.runButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.results {
+  margin-top: 1.5rem;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.statCard {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.statLabel {
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.statValue {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.probabilityBand {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+  border: 1px solid var(--brand-primary);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.bandLabel {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.bandValue {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--brand-primary);
+}
+
+.histogram {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+}
+
+.histogramTitle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.25rem 0;
+}
+
+.histogramDesc {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  margin: 0 0 1rem 0;
+  line-height: 1.4;
+}
+
+.histogramBars {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 120px;
+  padding-top: 20px;
+}
+
+.barContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  position: relative;
+}
+
+.barCount {
+  position: absolute;
+  top: -18px;
+  font-size: 0.55rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.bar {
+  width: 100%;
+  background: linear-gradient(180deg, var(--brand-primary), #8b5cf6);
+  border-radius: 2px 2px 0 0;
+  min-height: 2px;
+  transition: height var(--transition-fast);
+  cursor: help;
+}
+
+.bar:hover {
+  background: linear-gradient(180deg, #60a5fa, #a78bfa);
+}
+
+.barLabel {
+  font-size: 0.6rem;
+  color: var(--text-tertiary);
+  margin-top: 0.25rem;
+  white-space: nowrap;
+}
+
+.histogramAxis {
+  text-align: center;
+  margin-top: 0.5rem;
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+}
+
+.disclaimer {
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+  text-align: center;
+  margin-top: 1rem;
+  font-style: italic;
+}
+
+.simLevelStats {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  margin-top: 1rem;
+  overflow-x: auto;
+}
+
+.simLevelStatsTitle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.75rem 0;
+}
+
+.simLevelStatsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 400px;
+}
+
+.simLevelStatsHeader {
+  display: grid;
+  grid-template-columns: 80px repeat(4, 1fr);
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: var(--bg-primary);
+  border-radius: var(--radius-sm);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+}
+
+.simLevelStatsRow {
+  display: grid;
+  grid-template-columns: 80px repeat(4, 1fr);
+  gap: 0.5rem;
+  padding: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.simLevelStatsRow:last-child {
+  border-bottom: none;
+}
+
+.simLevelLabel {
+  font-family: monospace;
+  color: var(--text-primary);
+}
+
+.successCount {
+  color: #22c55e;
+}
+
+.failCount {
+  color: #ef4444;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 1.5rem;
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+
+  .simControls {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .orbLimitChance {
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+
+  .chanceValue {
+    font-size: 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .simControls {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .simInfo {
+    flex-direction: row;
+    gap: 2rem;
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .probabilityBand {
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .histogramBars {
+    height: 120px;
+  }
+
+  .barLabel {
+    font-size: 0.7rem;
+  }
+}
