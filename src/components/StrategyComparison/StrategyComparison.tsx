@@ -34,6 +34,42 @@ interface Strategy {
   riskProfile: 'low' | 'medium' | 'high';
 }
 
+/**
+ * Build delta memo using random walk model
+ * Failure goes back 1 level (or stays at 0 if at 0)
+ * Formula: Δ_i = (1 + q_i * Δ_{i-1}) / p_i
+ */
+function buildDeltaMemo(
+  maxLevel: number,
+  itemQuality: ItemQuality,
+  getOrbForLevel: (level: number) => OrbQuality
+): Map<number, number> {
+  const memo = new Map<number, number>();
+  
+  for (let level = 0; level < maxLevel; level++) {
+    const orbQuality = getOrbForLevel(level);
+    const successRate = enchantSuccessRate(level, itemQuality, orbQuality) / 100;
+    
+    if (successRate <= 0) {
+      memo.set(level, Infinity);
+      continue;
+    }
+    
+    const failureRate = 1 - successRate;
+    
+    if (level === 0) {
+      // Base case: at level 0, fail stays at 0
+      memo.set(level, 1 / successRate);
+    } else {
+      // Recursive: Δ_i = (1 + q_i * Δ_{i-1}) / p_i
+      const prevDelta = memo.get(level - 1) || 0;
+      memo.set(level, (1 + failureRate * prevDelta) / successRate);
+    }
+  }
+  
+  return memo;
+}
+
 function calculateStrategyPath(
   currentLevel: number,
   maxLevel: number,
@@ -41,35 +77,14 @@ function calculateStrategyPath(
   getOrbForLevel: (level: number) => OrbQuality
 ): StrategyStep[] {
   const steps: StrategyStep[] = [];
+  
+  // Build delta memo for all levels using random walk model
+  const memo = buildDeltaMemo(maxLevel, itemQuality, getOrbForLevel);
 
   for (let level = currentLevel; level < maxLevel; level++) {
     const orbQuality = getOrbForLevel(level);
     const successRate = enchantSuccessRate(level, itemQuality, orbQuality);
-
-    const memo = new Map<number, number>();
-    let expectedOrbs: number;
-
-    if (successRate <= 0) {
-      expectedOrbs = Infinity;
-    } else {
-      const p = successRate / 100;
-      const failureRate = 1 - p;
-
-      // Calculate cost to recover to this level if we fail
-      for (let l = 1; l <= level; l++) {
-        const orbForRecovery = getOrbForLevel(l - 1);
-        const recoverRate = enchantSuccessRate(l - 1, itemQuality, orbForRecovery) / 100;
-        if (recoverRate <= 0) {
-          memo.set(l, Infinity);
-        } else {
-          const prevCost = memo.get(l - 1) || 0;
-          memo.set(l, (1 + (1 - recoverRate) * prevCost) / recoverRate);
-        }
-      }
-
-      const costToRecover = level > 0 ? (memo.get(level) || 0) : 0;
-      expectedOrbs = (1 + failureRate * costToRecover) / p;
-    }
+    const expectedOrbs = memo.get(level) || Infinity;
 
     steps.push({
       fromLevel: level,

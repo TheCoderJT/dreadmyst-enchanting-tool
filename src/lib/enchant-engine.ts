@@ -132,8 +132,13 @@ export function expectedOrbsToLevel(
 }
 
 /**
- * Build a memoized map of expected orbs to reach each level from 0
- * Uses proper recursive model: E[n] = (1 + (1-p) * E[n-1]) / p
+ * Build a memoized map of expected orbs (delta) for each step
+ * Uses random walk model with reflecting boundary at 0:
+ * - Success: move from i to i+1
+ * - Failure: move from i to i-1 (or stay at 0 if already at 0)
+ * 
+ * Formula: Δ_i = (1 + q_i * Δ_{i-1}) / p_i
+ * Where p_i = success rate at level i, q_i = 1 - p_i
  */
 function buildExpectedOrbsMemo(
   maxLevel: number,
@@ -141,10 +146,9 @@ function buildExpectedOrbsMemo(
   orbQuality: OrbQuality
 ): Map<number, number> {
   const memo = new Map<number, number>();
-  memo.set(0, 0);
   
-  for (let level = 1; level <= maxLevel; level++) {
-    const successRate = enchantSuccessRate(level - 1, itemQuality, orbQuality) / 100;
+  for (let level = 0; level < maxLevel; level++) {
+    const successRate = enchantSuccessRate(level, itemQuality, orbQuality) / 100;
     
     if (successRate <= 0) {
       memo.set(level, Infinity);
@@ -152,25 +156,29 @@ function buildExpectedOrbsMemo(
     }
     
     const failureRate = 1 - successRate;
-    const prevCost = memo.get(level - 1) || 0;
     
-    // E[n] = (1 + (1-p) * E[n-1]) / p
-    // This accounts for: 1 attempt + if fail, pay cost to recover to previous level
-    const expected = (1 + failureRate * prevCost) / successRate;
-    memo.set(level, expected);
+    if (level === 0) {
+      // Base case: at level 0, fail stays at 0, so Δ_0 = 1/p_0
+      memo.set(level, 1 / successRate);
+    } else {
+      // Recursive case: Δ_i = (1 + q_i * Δ_{i-1}) / p_i
+      const prevDelta = memo.get(level - 1) || 0;
+      memo.set(level, (1 + failureRate * prevDelta) / successRate);
+    }
   }
   
   return memo;
 }
 
 /**
- * Calculate expected orbs for a single enchant step
- * Uses proper recursive model accounting for compounding recovery costs
+ * Calculate expected orbs for a single enchant step (from level i to i+1)
+ * Uses random walk model: failure goes back 1 level (or stays at 0)
+ * 
  * @param fromLevel - Current enchant level
  * @param itemQuality - Quality tier of the item
  * @param orbQuality - Quality tier of the orb being used
- * @param memo - Optional pre-computed memo map
- * @returns Expected orbs for this single step
+ * @param memo - Optional pre-computed memo map of deltas
+ * @returns Expected orbs for this single step (Δ_i)
  */
 export function expectedOrbsForStep(
   fromLevel: number,
@@ -178,22 +186,13 @@ export function expectedOrbsForStep(
   orbQuality: OrbQuality,
   memo?: Map<number, number>
 ): number {
-  const successRate = enchantSuccessRate(fromLevel, itemQuality, orbQuality) / 100;
-  
-  if (successRate <= 0) return Infinity;
-  if (successRate >= 1) return 1;
-  
   // Build memo if not provided
   if (!memo) {
     const maxLevel = MAX_ENCHANT[itemQuality];
     memo = buildExpectedOrbsMemo(maxLevel, itemQuality, orbQuality);
   }
   
-  const failureRate = 1 - successRate;
-  const costToRecover = memo.get(fromLevel) || 0;
-  
-  // E = (1 + failureRate * costToRecover) / successRate
-  return (1 + failureRate * costToRecover) / successRate;
+  return memo.get(fromLevel) || Infinity;
 }
 
 /**
