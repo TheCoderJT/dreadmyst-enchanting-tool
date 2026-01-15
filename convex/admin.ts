@@ -311,6 +311,15 @@ export const deleteCompletedItemAdmin = mutation({
       .withIndex("by_user", (q) => q.eq("userId", item.userId))
       .first();
 
+    // Delete the screenshot from storage if it exists
+    if (item.screenshotStorageId) {
+      try {
+        await ctx.storage.delete(item.screenshotStorageId);
+      } catch (e) {
+        console.log("Could not delete storage file:", e);
+      }
+    }
+
     // Delete the item
     await ctx.db.delete(args.completedItemId);
 

@@ -81,6 +81,7 @@ const schema = defineSchema({
     isVerified: v.optional(v.boolean()),
     verifiedAt: v.optional(v.number()),
     screenshotUrl: v.optional(v.string()),
+    screenshotStorageId: v.optional(v.id("_storage")),
   })
     .index("by_completed_at", ["completedAt"])
     .index("by_success_rate", ["successRate"])

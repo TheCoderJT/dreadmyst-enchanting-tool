@@ -401,6 +401,7 @@ export const updateVerificationStatus = mutation({
       isVerified: args.verified,
       verifiedAt: args.verified ? Date.now() : undefined,
       screenshotUrl: screenshotUrl || undefined,
+      screenshotStorageId: args.storageId,
     });
 
     // Also update the session if it exists

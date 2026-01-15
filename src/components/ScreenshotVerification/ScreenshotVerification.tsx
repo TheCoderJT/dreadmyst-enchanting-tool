@@ -1,10 +1,9 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { useAction } from "convex/react";
+import { useAction, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Id } from "../../../convex/_generated/dataModel";
-import { useUploadThing } from "@/lib/uploadthing";
 import styles from "./ScreenshotVerification.module.css";
 
 const MAX_WIDTH = 400;
@@ -201,43 +200,8 @@ export default function ScreenshotVerification({
   } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const verifyScreenshotWithUrl = useAction(api.verification.verifyScreenshotWithUrl);
-
-  const { startUpload } = useUploadThing("screenshotUploader", {
-    onClientUploadComplete: async (res) => {
-      if (res && res[0]) {
-        const imageUrl = res[0].ufsUrl || res[0].url;
-        setIsUploading(false);
-        setIsVerifying(true);
-
-        try {
-          const verificationResult = await verifyScreenshotWithUrl({
-            completedItemId,
-            imageUrl,
-          });
-
-          if (!verificationResult.success) {
-            setError(verificationResult.error || "Verification failed");
-            setResult(null);
-          } else {
-            setResult({
-              verified: verificationResult.verified,
-              details: verificationResult.details,
-            });
-            onVerificationComplete?.(verificationResult.verified);
-          }
-        } catch (err: any) {
-          setError(err.message || "Verification error");
-        } finally {
-          setIsVerifying(false);
-        }
-      }
-    },
-    onUploadError: (err) => {
-      setError(err.message || "Upload failed");
-      setIsUploading(false);
-    },
-  });
+  const generateUploadUrl = useMutation(api.verification.generateUploadUrl);
+  const verifyScreenshot = useAction(api.verification.verifyScreenshot);
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -268,13 +232,47 @@ export default function ScreenshotVerification({
     try {
       // Compress the image before upload
       const compressedBlob = await compressImage(file);
-      const compressedFile = new File([compressedBlob], "screenshot.jpg", { type: "image/jpeg" });
       
-      // Upload via UploadThing
-      await startUpload([compressedFile]);
+      // Get upload URL from Convex
+      const uploadUrl = await generateUploadUrl();
+      
+      // Upload to Convex storage
+      const uploadResponse = await fetch(uploadUrl, {
+        method: "POST",
+        headers: { "Content-Type": compressedBlob.type },
+        body: compressedBlob,
+      });
+      
+      if (!uploadResponse.ok) {
+        throw new Error("Upload failed");
+      }
+      
+      const { storageId } = await uploadResponse.json();
+      
+      setIsUploading(false);
+      setIsVerifying(true);
+      
+      // Verify the screenshot
+      const verificationResult = await verifyScreenshot({
+        completedItemId,
+        storageId,
+      });
+      
+      if (!verificationResult.success) {
+        setError(verificationResult.error || "Verification failed");
+        setResult(null);
+      } else {
+        setResult({
+          verified: verificationResult.verified,
+          details: verificationResult.details,
+        });
+        onVerificationComplete?.(verificationResult.verified);
+      }
     } catch (err: any) {
       setError(err.message || "An error occurred");
+    } finally {
       setIsUploading(false);
+      setIsVerifying(false);
     }
 
     // Reset file input
