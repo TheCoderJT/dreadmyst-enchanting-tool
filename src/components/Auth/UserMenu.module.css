@@ -1,0 +1,116 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.loading {
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
+  padding: 0.5rem;
+}
+
+.loginButton {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.5em 1em;
+  background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+  border: none;
+  border-radius: var(--radius-md);
+  color: white;
+  font-size: clamp(0.8rem, 2vw, 0.85rem);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+  min-height: 2.5rem;
+}
+
+.loginButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+}
+
+.loginIcon {
+  font-size: 0.9rem;
+}
+
+.signOutButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.45em 0.9em;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: clamp(0.75rem, 2vw, 0.8rem);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  min-height: 2.5rem;
+}
+
+.signOutButton:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.userIcon {
+  font-size: 0.85rem;
+}
+
+.signOutText {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .signOutText {
+    display: inline;
+  }
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modalContent {
+  position: relative;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  max-width: 450px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modalClose {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  color: var(--text-tertiary);
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  line-height: 1;
+  transition: color var(--transition-fast);
+  z-index: 1;
+}
+
+.modalClose:hover {
+  color: var(--text-primary);
+}

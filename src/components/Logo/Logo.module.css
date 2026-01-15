@@ -1,0 +1,103 @@
+.logoContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.logoIcon {
+  flex-shrink: 0;
+}
+
+.logoTextWrapper {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.logoTextBrand {
+  font-weight: 800;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  letter-spacing: -0.02em;
+  background: var(--brand-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  white-space: nowrap;
+}
+
+.logoTextSub {
+  font-weight: 500;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.02em;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+/* Size variants */
+.small .logoIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.small .logoTextBrand {
+  font-size: 0.875rem;
+}
+
+.small .logoTextSub {
+  font-size: 0.625rem;
+}
+
+.medium .logoIcon {
+  width: clamp(1.75rem, 5vw, 2.25rem);
+  height: clamp(1.75rem, 5vw, 2.25rem);
+}
+
+.medium .logoTextBrand {
+  font-size: clamp(1rem, 4vw, 1.25rem);
+}
+
+.medium .logoTextSub {
+  font-size: clamp(0.6rem, 2vw, 0.75rem);
+}
+
+.large .logoIcon {
+  width: 3rem;
+  height: 3rem;
+}
+
+.large .logoTextBrand {
+  font-size: 1.5rem;
+}
+
+.large .logoTextSub {
+  font-size: 0.875rem;
+}
+
+/* Sparkle animation */
+.sparkle {
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+.sparkle:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+.sparkle:nth-child(3) {
+  animation-delay: 1s;
+}
+
+.sparkle:nth-child(4) {
+  animation-delay: 1.5s;
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}

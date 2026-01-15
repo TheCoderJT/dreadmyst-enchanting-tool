@@ -1,25 +1,27 @@
 .container {
   margin-top: 1rem;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 .title {
-  font-size: 1rem;
+  font-size: clamp(0.95rem, 2.5vw, 1.5rem);
   font-weight: 600;
   margin-bottom: 0.5rem;
   color: var(--text-primary);
 }
 
 .subtitle {
-  font-size: 0.75rem;
+  font-size: clamp(0.7rem, 2vw, 0.9rem);
   color: var(--text-secondary);
   margin-bottom: 0.5rem;
 }
 
 .disclaimer {
-  font-size: 0.7rem;
+  font-size: clamp(0.65rem, 1.5vw, 0.8rem);
   color: var(--text-tertiary);
   margin-bottom: 1rem;
-  padding: 0.4rem 0.6rem;
+  padding: clamp(0.375rem, 1vw, 0.5rem) clamp(0.5rem, 1.5vw, 0.75rem);
   background: rgba(255, 193, 7, 0.1);
   border-left: 3px solid #ffc107;
   border-radius: var(--radius-sm);
@@ -35,7 +37,7 @@
   background: var(--bg-tertiary);
   border: 1px solid var(--border-primary);
   border-radius: var(--radius-lg);
-  padding: 0.875rem;
+  padding: clamp(0.75rem, 2vw, 1.25rem);
   transition: border-color var(--transition-normal), transform var(--transition-normal);
 }
 
@@ -77,17 +79,17 @@
 }
 
 .strategyName {
-  font-size: 0.9rem;
+  font-size: clamp(0.85rem, 2vw, 1rem);
   font-weight: 600;
   color: var(--text-primary);
 }
 
 .riskBadge {
-  font-size: 0.6rem;
+  font-size: clamp(0.55rem, 1.5vw, 0.7rem);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.03em;
-  padding: 0.2rem 0.4rem;
+  padding: 0.2em 0.4em;
   border-radius: var(--radius-sm);
   background: var(--bg-secondary);
 }
@@ -123,12 +125,12 @@
 }
 
 .totalLabel {
-  font-size: 0.7rem;
+  font-size: clamp(0.65rem, 1.5vw, 0.85rem);
   color: var(--text-secondary);
 }
 
 .totalValue {
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 2.5vw, 1.25rem);
   font-weight: 700;
   color: var(--text-primary);
 }
@@ -141,7 +143,7 @@
 .stepsTable {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.7rem;
+  font-size: clamp(0.65rem, 1.5vw, 0.8rem);
 }
 
 .stepsTable th,
@@ -152,7 +154,7 @@
 }
 
 .stepsTable th {
-  font-size: 0.55rem;
+  font-size: clamp(0.5rem, 1.25vw, 0.65rem);
   font-weight: 600;
   color: var(--text-tertiary);
   text-transform: uppercase;
@@ -180,41 +182,13 @@
 }
 
 @media (min-width: 480px) {
-  .title {
-    font-size: 1.1rem;
-  }
-
-  .subtitle {
-    font-size: 0.8rem;
-  }
-
-  .disclaimer {
-    font-size: 0.75rem;
-  }
-
-  .strategyCard {
-    padding: 1rem;
-  }
-
-  .strategyName {
-    font-size: 0.95rem;
-  }
-
   .strategyDescription {
     display: block;
   }
 
-  .stepsTable {
-    font-size: 0.75rem;
-  }
-
-  .stepsTable th {
-    font-size: 0.6rem;
-  }
-
   .orbDot {
-    width: 7px;
-    height: 7px;
+    width: 0.4375rem;
+    height: 0.4375rem;
   }
 }
 
@@ -223,16 +197,7 @@
     margin-top: 1.5rem;
   }
 
-  .title {
-    font-size: 1.25rem;
-  }
-
-  .subtitle {
-    font-size: 0.9rem;
-  }
-
   .disclaimer {
-    font-size: 0.8rem;
     margin-bottom: 1.5rem;
   }
 
@@ -240,40 +205,8 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .strategyCard {
-    padding: 1rem;
-  }
-
-  .strategyName {
-    font-size: 0.95rem;
-  }
-
-  .riskBadge {
-    font-size: 0.65rem;
-  }
-
-  .strategyDescription {
-    font-size: 0.75rem;
-  }
-
-  .totalCost {
-    padding: 0.6rem 0.8rem;
-  }
-
-  .totalLabel {
-    font-size: 0.8rem;
-  }
-
-  .totalValue {
-    font-size: 1.1rem;
-  }
-
   .stepsContainer {
-    max-height: 180px;
-  }
-
-  .stepsTable {
-    font-size: 0.75rem;
+    max-height: 11.25rem;
   }
 
   .stepsTable th,
@@ -281,63 +214,19 @@
     padding: 0.4rem;
   }
 
-  .stepsTable th {
-    font-size: 0.6rem;
-  }
-
-  .orbIndicator {
-    gap: 0.3rem;
-  }
-
   .orbDot {
-    width: 7px;
-    height: 7px;
+    width: 0.4375rem;
+    height: 0.4375rem;
   }
 }
 
 @media (min-width: 1024px) {
-  .title {
-    font-size: 1.5rem;
-  }
-
   .strategiesGrid {
     grid-template-columns: repeat(3, 1fr);
   }
 
-  .strategyCard {
-    padding: 1.25rem;
-  }
-
-  .strategyName {
-    font-size: 1rem;
-  }
-
-  .riskBadge {
-    font-size: 0.7rem;
-  }
-
-  .strategyDescription {
-    font-size: 0.8rem;
-  }
-
-  .totalCost {
-    padding: 0.75rem 1rem;
-  }
-
-  .totalLabel {
-    font-size: 0.85rem;
-  }
-
-  .totalValue {
-    font-size: 1.25rem;
-  }
-
   .stepsContainer {
-    max-height: 300px;
-  }
-
-  .stepsTable {
-    font-size: 0.8rem;
+    max-height: 18.75rem;
   }
 
   .stepsTable th,
@@ -345,16 +234,8 @@
     padding: 0.5rem;
   }
 
-  .stepsTable th {
-    font-size: 0.65rem;
-  }
-
-  .orbIndicator {
-    gap: 0.35rem;
-  }
-
   .orbDot {
-    width: 8px;
-    height: 8px;
+    width: 0.5rem;
+    height: 0.5rem;
   }
 }

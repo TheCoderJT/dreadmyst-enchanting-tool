@@ -1,16 +1,18 @@
 .container {
-  padding: 1rem;
+  padding: clamp(0.75rem, 2vw, 1.5rem);
+  overflow-x: hidden;
+  width: 100%;
 }
 
 .title {
-  font-size: 1.1rem;
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
   font-weight: 600;
   color: var(--text-primary);
   margin: 0 0 0.25rem 0;
 }
 
 .subtitle {
-  font-size: 0.8rem;
+  font-size: clamp(0.75rem, 2vw, 0.8rem);
   color: var(--text-tertiary);
   margin: 0 0 1rem 0;
 }
@@ -29,7 +31,7 @@
 }
 
 .warningTitle {
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
   font-weight: 600;
   color: #ef4444;
   margin: 0 0 0.5rem 0;
@@ -64,9 +66,9 @@
 .simControls {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1rem;
+  gap: clamp(0.75rem, 2vw, 1rem);
   margin-bottom: 1.5rem;
-  padding: 1rem;
+  padding: clamp(0.75rem, 2vw, 1rem);
   background: var(--bg-tertiary);
   border-radius: var(--radius-md);
   border: 1px solid var(--border-primary);
@@ -84,13 +86,14 @@
 }
 
 .orbsInput {
-  padding: 0.75rem 1rem;
+  padding: 0.75em 1em;
   background: var(--bg-tertiary);
   border: 1px solid var(--border-primary);
   border-radius: var(--radius-md);
   color: var(--text-primary);
-  font-size: 0.95rem;
+  font-size: clamp(0.875rem, 2vw, 0.95rem);
   transition: border-color var(--transition-fast);
+  min-height: 2.75rem;
 }
 
 .orbsInput:hover {
@@ -137,7 +140,7 @@
 }
 
 .chanceValue {
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
   font-weight: 700;
 }
 
@@ -234,15 +237,16 @@
 
 .runButton {
   width: 100%;
-  padding: 0.75rem 1.5rem;
+  padding: 0.75em 1.5em;
   background: var(--brand-primary);
   color: white;
   border: none;
   border-radius: var(--radius-md);
-  font-size: 0.9rem;
+  font-size: clamp(0.85rem, 2vw, 0.9rem);
   font-weight: 600;
   cursor: pointer;
   transition: all var(--transition-fast);
+  min-height: 2.75rem;
 }
 
 .runButton:hover:not(:disabled) {
@@ -270,21 +274,21 @@
   background: var(--bg-tertiary);
   border: 1px solid var(--border-primary);
   border-radius: var(--radius-md);
-  padding: 0.75rem;
+  padding: clamp(0.625rem, 2vw, 0.75rem);
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
 }
 
 .statLabel {
-  font-size: 0.7rem;
+  font-size: clamp(0.6rem, 1.5vw, 0.7rem);
   color: var(--text-tertiary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .statValue {
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 2vw, 1rem);
   font-weight: 600;
   color: var(--text-primary);
 }
@@ -307,7 +311,7 @@
 }
 
 .bandValue {
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 2.5vw, 1.25rem);
   font-weight: 700;
   color: var(--brand-primary);
 }
@@ -320,7 +324,7 @@
 }
 
 .histogramTitle {
-  font-size: 0.85rem;
+  font-size: clamp(0.8rem, 2vw, 0.85rem);
   font-weight: 600;
   color: var(--text-primary);
   margin: 0 0 0.25rem 0;
@@ -336,9 +340,9 @@
 .histogramBars {
   display: flex;
   align-items: flex-end;
-  gap: 2px;
-  height: 100px;
-  padding-top: 24px;
+  gap: clamp(1px, 0.5vw, 4px);
+  height: clamp(80px, 15vw, 140px);
+  padding-top: clamp(1.25rem, 3vw, 1.75rem);
 }
 
 .barContainer {
@@ -462,40 +466,18 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .statValue {
-    font-size: 1rem;
-  }
-
-  .barCount {
-    font-size: 0.7rem;
-  }
-
-  .barLabel {
-    font-size: 0.6rem;
-  }
-
   .simLevelStatsHeader {
-    font-size: 0.65rem;
-    grid-template-columns: 75px repeat(4, 1fr);
+    grid-template-columns: 4.6875rem repeat(4, 1fr);
     gap: 0.5rem;
   }
 
   .simLevelStatsRow {
-    font-size: 0.75rem;
-    grid-template-columns: 75px repeat(4, 1fr);
+    grid-template-columns: 4.6875rem repeat(4, 1fr);
     gap: 0.5rem;
   }
 }
 
 @media (min-width: 768px) {
-  .container {
-    padding: 1.5rem;
-  }
-
-  .title {
-    font-size: 1.25rem;
-  }
-
   .simControls {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -505,41 +487,16 @@
     gap: 0.5rem;
   }
 
-  .chanceValue {
-    font-size: 2.5rem;
-  }
-
   .statsGrid {
     grid-template-columns: repeat(3, 1fr);
   }
 
-  .bandValue {
-    font-size: 1.25rem;
-  }
-
-  .histogramBars {
-    height: 120px;
-    gap: 4px;
-    padding-top: 28px;
-  }
-
-  .barCount {
-    font-size: 0.75rem;
-    top: -22px;
-  }
-
-  .barLabel {
-    font-size: 0.65rem;
-  }
-
   .simLevelStatsHeader {
-    font-size: 0.7rem;
-    grid-template-columns: 80px repeat(4, 1fr);
+    grid-template-columns: 5rem repeat(4, 1fr);
   }
 
   .simLevelStatsRow {
-    font-size: 0.8rem;
-    grid-template-columns: 80px repeat(4, 1fr);
+    grid-template-columns: 5rem repeat(4, 1fr);
   }
 }
 
@@ -557,13 +514,5 @@
     flex-direction: row;
     justify-content: center;
     gap: 1rem;
-  }
-
-  .histogramBars {
-    height: 140px;
-  }
-
-  .barLabel {
-    font-size: 0.7rem;
   }
 }

@@ -1,11 +1,23 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { useConvexAuth } from 'convex/react';
 import styles from './page.module.css';
 import StrategyComparison from '@/components/StrategyComparison';
 import SimulationResults from '@/components/SimulationResults';
 import TabNavigation from '@/components/TabNavigation';
 import ColorDropdown from '@/components/ColorDropdown';
+import AuthForm from '@/components/Auth/AuthForm';
+import UserMenu from '@/components/Auth/UserMenu';
+import EnchantTracker from '@/components/EnchantTracker';
+import Leaderboard from '@/components/Leaderboard';
+import Logo from '@/components/Logo/Logo';
+import Admin from '@/components/Admin/Admin';
+import Guidelines from '@/components/Guidelines/Guidelines';
+import TermsOfService from '@/components/TermsOfService/TermsOfService';
+import PrivacyPolicy from '@/components/PrivacyPolicy/PrivacyPolicy';
+import { useQuery } from 'convex/react';
+import { api } from '../../convex/_generated/api';
 import {
   ItemQuality,
   OrbQuality,
@@ -21,16 +33,43 @@ import {
   analyzeEnchantPath,
 } from '@/lib/enchant-engine';
 
-const TABS = [
+const BASE_TABS = [
   { id: 'calculator', label: 'Calculator', icon: '📊' },
   { id: 'simulator', label: 'Simulator', icon: '🎲' },
+  { id: 'tracker', label: 'My Tracker', icon: '📜' },
+  { id: 'leaderboard', label: 'Leaderboard', icon: '🏆' },
+  { id: 'guidelines', label: 'Guidelines', icon: '📋' },
 ];
 
+const ADMIN_TAB = { id: 'admin', label: 'Admin', icon: '⚙️' };
+
 export default function Home() {
+  const { isAuthenticated, isLoading } = useConvexAuth();
   const [activeTab, setActiveTab] = useState('calculator');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [itemQuality, setItemQuality] = useState<ItemQuality>(ItemQuality.Godly);
   const [orbQuality, setOrbQuality] = useState<OrbQuality>(OrbQuality.Divine);
   const [currentLevel, setCurrentLevel] = useState<number>(0);
+
+  // Check if user is admin/moderator
+  const adminCheck = useQuery(api.admin.isAdmin);
+
+  // Persist active tab in URL hash
+  useEffect(() => {
+    const hash = window.location.hash.slice(1);
+    const validTabs = ['calculator', 'simulator', 'tracker', 'leaderboard', 'guidelines', 'admin', 'terms', 'privacy'];
+    if (hash && validTabs.includes(hash)) {
+      setActiveTab(hash);
+    }
+  }, []);
+
+  // Update URL hash when tab changes
+  const handleTabChange = (tabId: string) => {
+    setActiveTab(tabId);
+    window.location.hash = tabId;
+    setMobileMenuOpen(false);
+  };
+  const TABS = adminCheck?.isModerator ? [...BASE_TABS, ADMIN_TAB] : BASE_TABS;
 
   const maxEnchant = MAX_ENCHANT[itemQuality];
 
@@ -78,18 +117,63 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
-      <header className={styles.header}>
-        <h1 className={styles.title}>Dreadmyst Enchanting Calculator</h1>
-        <p className={styles.subtitle}>
-          Calculate success rates and optimal orb strategies
-        </p>
-      </header>
-
-      <TabNavigation
-        tabs={TABS}
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-      />
+      <nav className={styles.navbar}>
+        <div className={styles.navContent}>
+          <Logo size="medium" showText={true} />
+          
+          {/* Desktop Navigation */}
+          <div className={styles.navTabs}>
+            {TABS.map((tab) => (
+              <button
+                key={tab.id}
+                className={`${styles.navTab} ${activeTab === tab.id ? styles.navTabActive : ''}`}
+                onClick={() => handleTabChange(tab.id)}
+              >
+                <span className={styles.navTabIcon}>{tab.icon}</span>
+                <span className={styles.navTabLabel}>{tab.label}</span>
+              </button>
+            ))}
+          </div>
+          
+          <div className={styles.navAuth}>
+            <UserMenu />
+          </div>
+          
+          {/* Mobile Hamburger Button */}
+          <button
+            className={styles.hamburgerButton}
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+            aria-expanded={mobileMenuOpen}
+          >
+            <span className={`${styles.hamburgerLine} ${mobileMenuOpen ? styles.hamburgerLineOpen : ''}`} />
+            <span className={`${styles.hamburgerLine} ${mobileMenuOpen ? styles.hamburgerLineOpen : ''}`} />
+            <span className={`${styles.hamburgerLine} ${mobileMenuOpen ? styles.hamburgerLineOpen : ''}`} />
+          </button>
+        </div>
+        
+        {/* Mobile Menu Overlay */}
+        {mobileMenuOpen && (
+          <div className={styles.mobileMenuOverlay} onClick={() => setMobileMenuOpen(false)} />
+        )}
+        
+        {/* Mobile Menu */}
+        <div className={`${styles.mobileMenu} ${mobileMenuOpen ? styles.mobileMenuOpen : ''}`}>
+          {TABS.map((tab) => (
+            <button
+              key={tab.id}
+              className={`${styles.mobileMenuItem} ${activeTab === tab.id ? styles.mobileMenuItemActive : ''}`}
+              onClick={() => handleTabChange(tab.id)}
+            >
+              <span className={styles.mobileMenuIcon}>{tab.icon}</span>
+              <span className={styles.mobileMenuLabel}>{tab.label}</span>
+            </button>
+          ))}
+          <div className={styles.mobileMenuAuth}>
+            <UserMenu />
+          </div>
+        </div>
+      </nav>
 
       <div className={styles.container}>
         {activeTab === 'calculator' && (
@@ -315,73 +399,115 @@ export default function Home() {
             />
           </div>
         )}
+
+        {activeTab === 'tracker' && (
+          <div className={styles.authContent}>
+            {isAuthenticated ? (
+              <EnchantTracker />
+            ) : (
+              <AuthForm />
+            )}
+          </div>
+        )}
+
       </div>
 
-      <footer className={styles.footer}>
-        <div className={styles.footerGrid}>
-            <div className={styles.footerColumn}>
-              <h4 className={styles.footerHeading}>Built by IsItP2W</h4>
-              <p className={styles.footerText}>
-                Helping gamers make informed decisions about game monetization.
-              </p>
-              <div className={styles.footerLinks}>
-                <a
-                  href="https://isitp2w.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.footerLink}
-                >
-                  IsItP2W.com
-                </a>
-                <a
-                  href="https://isitp2w.com/games/dreadmyst"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.footerLink}
-                >
-                  Dreadmyst on IsItP2W
-                </a>
-              </div>
-              <div className={styles.footerEmbed}>
-                <iframe
-                  src="https://isitp2w.com/api/embed/dreadmyst"
-                  width="100%"
-                  height="150"
-                  frameBorder="0"
-                  title="Dreadmyst Official P2W Score"
-                  className={styles.embedFrame}
-                />
-              </div>
-            </div>
+      {activeTab === 'leaderboard' && (
+        <div className={styles.leaderboardFullWidth}>
+          <Leaderboard />
+        </div>
+      )}
 
-            <div className={styles.footerColumn}>
-              <h4 className={styles.footerHeading}>Data Attribution</h4>
-              <p className={styles.footerText}>
-                Enchanting formulas provided by <strong>@sithadmin</strong>
-              </p>
-              <div className={styles.footerLinks}>
-                <a
-                  href="https://docs.google.com/spreadsheets/d/1GxuInbx8yLYp4mnmaHgCMmRkSamrE_cBCYlzvg1pCqM/edit?usp=sharing"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.footerLink}
-                >
-                  Dreadmyst Info Spreadsheet
-                </a>
+      {activeTab === 'admin' && adminCheck?.isModerator && (
+        <div className={styles.leaderboardFullWidth}>
+          <Admin />
+        </div>
+      )}
+
+      {activeTab === 'guidelines' && (
+        <div className={styles.leaderboardFullWidth}>
+          <Guidelines />
+        </div>
+      )}
+
+      {activeTab === 'terms' && (
+        <div className={styles.leaderboardFullWidth}>
+          <TermsOfService />
+        </div>
+      )}
+
+      {activeTab === 'privacy' && (
+        <div className={styles.leaderboardFullWidth}>
+          <PrivacyPolicy />
+        </div>
+      )}
+
+      <footer className={styles.footer}>
+        <div className={styles.footerContent}>
+          <div className={styles.footerMain}>
+            <div className={styles.footerGrid}>
+              {/* Brand Column */}
+              <div className={styles.footerColumn}>
+                <h4 className={styles.footerHeading}>Dreadmyst Enchanting Tool</h4>
+                <p className={styles.footerText}>
+                  A community tool for calculating enchanting odds, tracking progress, and competing on the leaderboard.
+                </p>
+                <p className={styles.footerText}>
+                  Built by <a href="https://isitp2w.com/" target="_blank" rel="noopener noreferrer" className={styles.footerInlineLink}>IsItP2W.com</a>
+                </p>
               </div>
-              <p className={styles.footerNote}>
-                Check the spreadsheet for more game info including dungeons, classes, spells, stats, and item affixes!
-              </p>
+
+              {/* Resources Column */}
+              <div className={styles.footerColumn}>
+                <h4 className={styles.footerHeading}>Resources</h4>
+                <div className={styles.footerLinks}>
+                  <a href="https://isitp2w.com/games/dreadmyst" target="_blank" rel="noopener noreferrer" className={styles.footerLink}>
+                    Dreadmyst on IsItP2W
+                  </a>
+                  <a href="https://docs.google.com/spreadsheets/d/1GxuInbx8yLYp4mnmaHgCMmRkSamrE_cBCYlzvg1pCqM/edit?usp=sharing" target="_blank" rel="noopener noreferrer" className={styles.footerLink}>
+                    Game Info Spreadsheet
+                  </a>
+                  <a href="https://discord.gg/VTjve676D2" target="_blank" rel="noopener noreferrer" className={styles.footerLink}>
+                    Discord Server
+                  </a>
+                </div>
+              </div>
+
+              {/* Legal Column */}
+              <div className={styles.footerColumn}>
+                <h4 className={styles.footerHeading}>Legal</h4>
+                <div className={styles.footerLinks}>
+                  <button onClick={() => handleTabChange('terms')} className={styles.footerLinkButton}>
+                    Terms of Service
+                  </button>
+                  <button onClick={() => handleTabChange('privacy')} className={styles.footerLinkButton}>
+                    Privacy Policy
+                  </button>
+                  <button onClick={() => handleTabChange('guidelines')} className={styles.footerLinkButton}>
+                    Submission Guidelines
+                  </button>
+                </div>
+              </div>
+
+              {/* Contact Column */}
+              <div className={styles.footerColumn}>
+                <h4 className={styles.footerHeading}>Contact & Credits</h4>
+                <p className={styles.footerText}>
+                  Enchanting data by <strong>@sithadmin</strong>
+                </p>
+                <p className={styles.footerText}>
+                  Issues? <a href="https://isitp2w.com/contact" target="_blank" rel="noopener noreferrer" className={styles.footerInlineLink}>Contact Us</a>
+                </p>
+                <p className={styles.footerTextSmall}>
+                  Not affiliated with Dreadmyst developers.
+                </p>
+              </div>
             </div>
           </div>
 
-        <div className={styles.footerDisclaimer}>
-          <p>Not affiliated with the official Dreadmyst team.</p>
-          <p>Issues? Contact <strong>@TheNamesJT</strong> on Discord</p>
-        </div>
-
-        <div className={styles.footerBottom}>
-          <p>© 2026 IsItP2W.com — Jordan D Turner (JT Digital Systems)</p>
+          <div className={styles.footerBottom}>
+            <p>© 2026 IsItP2W.com — Jordan D Turner (JT Digital Systems)</p>
+          </div>
         </div>
       </footer>
     </main>

@@ -1,0 +1,236 @@
+.container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+  overflow-x: hidden;
+}
+
+.title {
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+  text-align: center;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: clamp(0.875rem, 2vw, 1rem);
+}
+
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.section {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: clamp(1rem, 3vw, 1.25rem);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 1rem 0;
+}
+
+.sectionIcon {
+  font-size: 1.25rem;
+}
+
+.rulesList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.rulesList li {
+  padding: 1rem;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--brand-primary);
+}
+
+.rulesList li strong {
+  display: block;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.rulesList li p {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Example Screenshot */
+.exampleContainer {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-primary);
+  text-align: center;
+}
+
+.exampleLabel {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin: 0 0 1rem 0;
+}
+
+.exampleImage {
+  max-width: 100%;
+  width: auto;
+  max-height: 300px;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--border-primary);
+  box-shadow: var(--shadow-md);
+}
+
+.exampleCaption {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  margin: 1rem 0 0 0;
+  font-style: italic;
+}
+
+/* Enforcement Grid */
+.enforcementGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .enforcementGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.enforcementCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.25rem 1rem;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-primary);
+}
+
+.strikeNumber {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--brand-primary);
+}
+
+.strikeLabel {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.strikePenalty {
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.75rem;
+}
+
+.enforcementCard:nth-child(1) .strikePenalty {
+  background: rgba(234, 179, 8, 0.2);
+  color: #eab308;
+}
+
+.enforcementCard:nth-child(2) .strikePenalty {
+  background: rgba(249, 115, 22, 0.2);
+  color: #f97316;
+}
+
+.enforcementCard:nth-child(3) .strikePenalty {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.enforcementCard p {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.contactText {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Discord Link */
+.discordLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(88, 101, 242, 0.15);
+  border: 1px solid rgba(88, 101, 242, 0.4);
+  border-radius: var(--radius-md);
+  color: #5865f2;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+.discordLink:hover {
+  background: rgba(88, 101, 242, 0.25);
+  border-color: #5865f2;
+}
+
+.discordIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.footer {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-primary);
+  text-align: center;
+}
+
+.footer p {
+  color: var(--text-tertiary);
+  font-size: 0.75rem;
+  margin: 0.25rem 0;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 2rem;
+  }
+
+  .section {
+    padding: 2rem;
+  }
+}
