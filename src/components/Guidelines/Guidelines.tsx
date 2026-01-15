@@ -2,6 +2,8 @@
 
 import styles from "./Guidelines.module.css";
 
+const basePath = process.env.NODE_ENV === 'production' ? '/dreadmyst-enchanting-tool' : '';
+
 export default function Guidelines() {
   return (
     <div className={styles.container}>
@@ -33,7 +35,7 @@ export default function Guidelines() {
           <div className={styles.exampleContainer}>
             <p className={styles.exampleLabel}>Example Screenshot:</p>
             <img 
-              src="/example-tooltip.png" 
+              src={`${basePath}/example-tooltip.png`}
               alt="Example item tooltip showing Radiant Cap of Warm Vim +3"
               className={styles.exampleImage}
             />
