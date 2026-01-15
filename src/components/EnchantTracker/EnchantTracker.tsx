@@ -681,8 +681,8 @@ export default function EnchantTracker() {
                               itemName: item.itemName,
                               finalLevel: item.finalLevel,
                               totalAttempts: item.totalAttempts,
-                              totalSuccesses: item.totalSuccesses,
-                              totalFailures: item.totalFailures,
+                              totalSuccesses: item.totalSuccesses ?? 0,
+                              totalFailures: item.totalFailures ?? 0,
                               successRate: item.successRate,
                               orbsUsedByType: item.orbsUsedByType!,
                             })}
