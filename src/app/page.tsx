@@ -192,33 +192,37 @@ export default function Home() {
           <div className={styles.card}>
             <h2 className={styles.cardTitle}>Item Configuration</h2>
 
-            <ColorDropdown
-              label="Item Quality"
-              value={itemQuality}
-              onChange={(value) => {
-                const newQuality = value as ItemQuality;
-                setItemQuality(newQuality);
-                if (currentLevel > MAX_ENCHANT[newQuality]) {
-                  setCurrentLevel(0);
-                }
-              }}
-              options={Object.entries(ITEM_QUALITY_NAMES).map(([value, name]) => ({
-                value: Number(value),
-                label: name,
-                color: ITEM_QUALITY_COLORS[Number(value) as ItemQuality],
-              }))}
-            />
+            <div className={styles.inputGroup}>
+              <ColorDropdown
+                label="Item Quality"
+                value={itemQuality}
+                onChange={(value) => {
+                  const newQuality = value as ItemQuality;
+                  setItemQuality(newQuality);
+                  if (currentLevel > MAX_ENCHANT[newQuality]) {
+                    setCurrentLevel(0);
+                  }
+                }}
+                options={Object.entries(ITEM_QUALITY_NAMES).map(([value, name]) => ({
+                  value: Number(value),
+                  label: name,
+                  color: ITEM_QUALITY_COLORS[Number(value) as ItemQuality],
+                }))}
+              />
+            </div>
 
-            <ColorDropdown
-              label="Orb Quality"
-              value={orbQuality}
-              onChange={(value) => setOrbQuality(value as OrbQuality)}
-              options={Object.entries(ORB_QUALITY_NAMES).map(([value, name]) => ({
-                value: Number(value),
-                label: name,
-                color: ORB_QUALITY_COLORS[Number(value) as OrbQuality],
-              }))}
-            />
+            <div className={styles.inputGroup}>
+              <ColorDropdown
+                label="Orb Quality"
+                value={orbQuality}
+                onChange={(value) => setOrbQuality(value as OrbQuality)}
+                options={Object.entries(ORB_QUALITY_NAMES).map(([value, name]) => ({
+                  value: Number(value),
+                  label: name,
+                  color: ORB_QUALITY_COLORS[Number(value) as OrbQuality],
+                }))}
+              />
+            </div>
 
             <div className={styles.inputGroup}>
               <label className={styles.label}>

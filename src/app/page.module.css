@@ -293,7 +293,6 @@
   display: grid;
   gap: 1rem;
   width: 100%;
-  overflow-x: hidden;
 }
 
 .card {
@@ -302,7 +301,7 @@
   border-radius: var(--radius-lg);
   padding: clamp(0.875rem, 3vw, 1.5rem);
   transition: border-color var(--transition-normal);
-  overflow-x: hidden;
+  overflow: visible;
   max-width: 100%;
 }
 
@@ -318,7 +317,7 @@
 }
 
 .inputGroup {
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
 }
 
 .label {
