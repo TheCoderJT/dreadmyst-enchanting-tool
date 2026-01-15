@@ -214,12 +214,18 @@ export const logAttempt = mutation({
     }
 
     const fromLevel = session.currentLevel;
+    
+    // Prevent failure attempts when already at level 0
+    if (!args.success && fromLevel === 0) {
+      throw new Error("Cannot fail when item is already at +0");
+    }
+    
     let toLevel: number;
 
     if (args.success) {
       toLevel = fromLevel + 1;
     } else {
-      toLevel = Math.max(0, fromLevel - 1);
+      toLevel = fromLevel - 1; // Safe now since we checked above
     }
 
     // Update streak tracking

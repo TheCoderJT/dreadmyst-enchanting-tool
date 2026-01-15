@@ -311,7 +311,7 @@ export default function ScreenshotVerification({
             <div className={styles.resultContent}>
               <span className={styles.resultTitle}>Verification Failed</span>
               <span className={styles.resultNote}>{result.details?.notes}</span>
-              {result.details?.extractedLevel !== null && (
+              {result.details?.extractedLevel !== null && result.details && (
                 <div className={styles.extractedInfo}>
                   <span>AI detected: +{result.details.extractedLevel}</span>
                   <span>Expected: +{finalLevel}</span>

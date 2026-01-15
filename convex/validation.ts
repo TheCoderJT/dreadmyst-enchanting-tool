@@ -174,7 +174,7 @@ export const seedAffixes = internalMutation({
     }
     
     // Insert new affixes (deduplicated)
-    const uniqueAffixes = [...new Set(args.affixes.map(a => a.toLowerCase().trim()))];
+    const uniqueAffixes = Array.from(new Set(args.affixes.map(a => a.toLowerCase().trim())));
     
     for (const affixName of uniqueAffixes) {
       if (affixName) {
@@ -203,7 +203,7 @@ export const seedAffixesPublic = mutation({
     const existingNames = new Set(existingAffixes.map(a => a.affixName));
     
     // Insert new affixes (deduplicated, skip existing)
-    const uniqueAffixes = [...new Set(args.affixes.map(a => a.toLowerCase().trim()))];
+    const uniqueAffixes = Array.from(new Set(args.affixes.map(a => a.toLowerCase().trim())));
     
     let inserted = 0;
     for (const affixName of uniqueAffixes) {

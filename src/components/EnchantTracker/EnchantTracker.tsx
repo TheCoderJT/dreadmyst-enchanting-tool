@@ -63,6 +63,11 @@ export default function EnchantTracker() {
   const [completedSearch, setCompletedSearch] = useState("");
   const [completedSort, setCompletedSort] = useState<"newest" | "oldest" | "orbs" | "rarity" | "success">("newest");
   const [completedDisplayLimit, setCompletedDisplayLimit] = useState(15);
+  const [verifyingItem, setVerifyingItem] = useState<{
+    id: string;
+    itemName: string;
+    finalLevel: number;
+  } | null>(null);
   
   const inputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
@@ -717,12 +722,17 @@ export default function EnchantTracker() {
                           </button>
                         )}
                         {!item.isVerified && (
-                          <ScreenshotVerification
-                            completedItemId={item._id}
-                            itemName={item.itemName}
-                            finalLevel={item.finalLevel}
-                            isVerified={item.isVerified}
-                          />
+                          <button
+                            onClick={() => setVerifyingItem({
+                              id: item._id,
+                              itemName: item.itemName,
+                              finalLevel: item.finalLevel,
+                            })}
+                            className={styles.verifyBtn}
+                            title="Verify with screenshot"
+                          >
+                            📷 Verify
+                          </button>
                         )}
                         <button
                           onClick={() => handleDeleteCompleted(item._id, item.screenshotUrl)}
@@ -744,6 +754,27 @@ export default function EnchantTracker() {
                 >
                   Load More ({filteredItems.length - completedDisplayLimit} remaining)
                 </button>
+              )}
+              
+              {verifyingItem && (
+                <div className={styles.verificationPanel}>
+                  <div className={styles.verificationHeader}>
+                    <span>Verify: <strong>{verifyingItem.itemName}</strong> +{verifyingItem.finalLevel}</span>
+                    <button 
+                      onClick={() => setVerifyingItem(null)}
+                      className={styles.closeVerifyBtn}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  <ScreenshotVerification
+                    completedItemId={verifyingItem.id as any}
+                    itemName={verifyingItem.itemName}
+                    finalLevel={verifyingItem.finalLevel}
+                    isVerified={false}
+                    onVerificationComplete={() => setVerifyingItem(null)}
+                  />
+                </div>
               )}
             </div>
               );
@@ -867,7 +898,7 @@ export default function EnchantTracker() {
           <button
             onClick={() => handleLogAttempt(false)}
             className={styles.failButton}
-            disabled={session.orbInventory[selectedOrb] <= 0}
+            disabled={session.orbInventory[selectedOrb] <= 0 || session.currentLevel === 0}
           >
             ✗ Failure (-1)
           </button>

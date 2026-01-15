@@ -817,6 +817,62 @@
   color: var(--text-tertiary);
 }
 
+.verifyBtn {
+  padding: 0.25rem 0.5rem;
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  border-radius: var(--radius-sm);
+  color: #3b82f6;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.verifyBtn:hover {
+  background: rgba(59, 130, 246, 0.25);
+  border-color: #3b82f6;
+}
+
+.verificationPanel {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+}
+
+.verificationHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-primary);
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.verificationHeader strong {
+  color: var(--text-primary);
+}
+
+.closeVerifyBtn {
+  padding: 0.25rem 0.5rem;
+  background: transparent;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-sm);
+  color: var(--text-tertiary);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.closeVerifyBtn:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
 /* Mobile: Stack info in rows */
 @media (max-width: 767px) {
   .completedTableRow {
