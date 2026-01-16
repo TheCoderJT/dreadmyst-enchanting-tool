@@ -73,25 +73,49 @@ export const getAllUsers = query({
 
     const limit = args.limit ?? 100;
 
-    let profiles;
+    // Get all users from the users table first
+    let users;
     if (args.filterBanned) {
-      profiles = await ctx.db
+      // For banned filter, we need to check userProfiles
+      const bannedProfiles = await ctx.db
         .query("userProfiles")
         .withIndex("by_banned", (q) => q.eq("isBanned", true))
         .take(limit);
+      
+      const bannedUserIds = bannedProfiles.map(profile => profile.userId);
+      users = await Promise.all(
+        bannedUserIds.map(userId => ctx.db.get(userId))
+      );
+      users = users.filter(user => user !== null);
     } else {
-      profiles = await ctx.db
-        .query("userProfiles")
+      users = await ctx.db
+        .query("users")
         .take(limit);
     }
 
-    // Get user emails for each profile
+    // Get user profiles for each user (if they exist)
     const usersWithDetails = await Promise.all(
-      profiles.map(async (profile) => {
-        const user = await ctx.db.get(profile.userId);
+      users.map(async (user) => {
+        const profile = await ctx.db
+          .query("userProfiles")
+          .withIndex("by_user", (q) => q.eq("userId", user._id))
+          .first();
+
         return {
-          ...profile,
+          _id: user._id,
+          displayName: profile?.displayName || "Not Set",
           email: user?.email || "Unknown",
+          role: profile?.role || "user",
+          totalItemsCompleted: profile?.totalItemsCompleted || 0,
+          totalAttempts: profile?.totalAttempts || 0,
+          totalSuccesses: profile?.totalSuccesses || 0,
+          overallSuccessRate: profile?.overallSuccessRate || 0,
+          isBanned: profile?.isBanned || false,
+          banReason: profile?.banReason,
+          bannedAt: profile?.bannedAt,
+          bannedUntil: profile?.bannedUntil,
+          bannedBy: profile?.bannedBy,
+          savedOrbInventory: profile?.savedOrbInventory,
         };
       })
     );
@@ -466,7 +490,7 @@ export const getAdminStats = query({
       verifiedItems,
       recentActions,
     ] = await Promise.all([
-      ctx.db.query("userProfiles").collect().then((p) => p.length),
+      ctx.db.query("users").collect().then((u) => u.length),
       ctx.db
         .query("userProfiles")
         .withIndex("by_banned", (q) => q.eq("isBanned", true))

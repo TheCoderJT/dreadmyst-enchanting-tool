@@ -209,7 +209,7 @@ export default function Admin() {
                         {user.isBanned ? (
                           <button
                             className={styles.unbanBtn}
-                            onClick={() => handleUnban(user.userId)}
+                            onClick={() => handleUnban(user._id)}
                           >
                             Unban
                           </button>
@@ -218,7 +218,7 @@ export default function Admin() {
                             <button
                               className={styles.warnBtn}
                               onClick={() => {
-                                setSelectedUser(user.userId);
+                                setSelectedUser(user._id);
                                 setShowWarnModal(true);
                               }}
                             >
@@ -227,7 +227,7 @@ export default function Admin() {
                             <button
                               className={styles.banBtn}
                               onClick={() => {
-                                setSelectedUser(user.userId);
+                                setSelectedUser(user._id);
                                 setShowBanModal(true);
                               }}
                             >
