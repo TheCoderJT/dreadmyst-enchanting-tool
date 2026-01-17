@@ -136,7 +136,7 @@ export default function Home() {
           </div>
           
           <div className={styles.navAuth}>
-            <UserMenu />
+            <UserMenu onAuthSuccess={() => handleTabChange('tracker')} />
           </div>
           
           {/* Mobile Hamburger Button */}
@@ -170,7 +170,7 @@ export default function Home() {
             </button>
           ))}
           <div className={styles.mobileMenuAuth}>
-            <UserMenu />
+            <UserMenu onAuthSuccess={() => handleTabChange('tracker')} />
           </div>
         </div>
       </nav>

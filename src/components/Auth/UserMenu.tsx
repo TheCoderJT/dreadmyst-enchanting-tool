@@ -8,10 +8,19 @@ import styles from "./UserMenu.module.css";
 import AuthForm from "./AuthForm";
 import { api } from "../../../convex/_generated/api";
 
-export default function UserMenu() {
+interface UserMenuProps {
+  onAuthSuccess?: () => void;
+}
+
+export default function UserMenu({ onAuthSuccess }: UserMenuProps) {
   const { isAuthenticated, isLoading } = useConvexAuth();
   const { signOut } = useAuthActions();
   const [showAuthModal, setShowAuthModal] = useState(false);
+
+  const handleAuthSuccess = () => {
+    setShowAuthModal(false);
+    onAuthSuccess?.();
+  };
 
   if (isLoading) {
     return <div className={styles.loading}>...</div>;
@@ -36,7 +45,7 @@ export default function UserMenu() {
               >
                 ✕
               </button>
-              <AuthForm onSuccess={() => setShowAuthModal(false)} />
+              <AuthForm onSuccess={handleAuthSuccess} />
             </div>
           </div>
         )}
