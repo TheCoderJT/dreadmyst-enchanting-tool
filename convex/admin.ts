@@ -488,6 +488,8 @@ export const getAdminStats = query({
       bannedUsers,
       totalCompletedItems,
       verifiedItems,
+      inProgressSessions,
+      pausedSessions,
       recentActions,
     ] = await Promise.all([
       ctx.db.query("users").collect().then((u) => u.length),
@@ -503,6 +505,16 @@ export const getAdminStats = query({
         .collect()
         .then((i) => i.length),
       ctx.db
+        .query("enchantSessions")
+        .withIndex("by_status", (q) => q.eq("status", "in_progress"))
+        .collect()
+        .then((s) => s.length),
+      ctx.db
+        .query("enchantSessions")
+        .withIndex("by_status", (q) => q.eq("status", "paused"))
+        .collect()
+        .then((s) => s.length),
+      ctx.db
         .query("moderationActions")
         .withIndex("by_timestamp")
         .order("desc")
@@ -514,6 +526,8 @@ export const getAdminStats = query({
       bannedUsers,
       totalCompletedItems,
       verifiedItems,
+      inProgressSessions,
+      pausedSessions,
       recentActionsCount: recentActions.length,
     };
   },

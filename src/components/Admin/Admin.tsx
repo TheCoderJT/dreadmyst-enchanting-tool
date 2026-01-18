@@ -162,6 +162,14 @@ export default function Admin() {
                 <span className={styles.statValue}>{stats?.verifiedItems || 0}</span>
                 <span className={styles.statLabel}>Verified Items</span>
               </div>
+              <div className={styles.statCard}>
+                <span className={styles.statValue} style={{ color: "#3b82f6" }}>{stats?.inProgressSessions || 0}</span>
+                <span className={styles.statLabel}>In Progress</span>
+              </div>
+              <div className={styles.statCard}>
+                <span className={styles.statValue} style={{ color: "#f59e0b" }}>{stats?.pausedSessions || 0}</span>
+                <span className={styles.statLabel}>Paused Sessions</span>
+              </div>
             </div>
           </div>
         )}
