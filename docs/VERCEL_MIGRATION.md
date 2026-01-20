@@ -86,7 +86,13 @@ Add these environment variables in Vercel project settings:
 |----------|-------|-------|
 | `NEXT_PUBLIC_CONVEX_URL` | Your Convex deployment URL | Required |
 | `CONVEX_DEPLOYMENT` | Your Convex deployment ID | Required |
-| `OPENAI_API_KEY` | Your OpenAI API key | For AI features |
+| `OPENAI_API_KEY` | Your OpenAI API key | For AI moderation/verification |
+| `OPENAI_MODERATION_MODEL` | `gpt-4o-mini` | Optional (defaults in code) |
+| `OPENAI_VISION_MODEL` | `gpt-4o-mini` | Optional (defaults in code) |
+| `OPENAI_MAX_TOKENS_MODERATION` | `50` | Optional |
+| `OPENAI_MAX_TOKENS_VISION` | `200` | Optional |
+
+**Note**: Screenshots are stored in Convex Storage (built-in), no external storage service needed.
 
 #### 3.3 Initial Deploy
 Deploy and verify the site works at the Vercel-provided URL (e.g., `dreadmyst-enchanting-tool.vercel.app`).
@@ -307,9 +313,18 @@ If issues occur during migration:
 
 ### Vercel Environment Variables (for dreadmyst-enchanting-tool project)
 ```
+# Required
 NEXT_PUBLIC_CONVEX_URL=https://your-deployment.convex.cloud
 CONVEX_DEPLOYMENT=your-deployment-id
 OPENAI_API_KEY=sk-...
+
+# Optional (have defaults in code)
+OPENAI_MODERATION_MODEL=gpt-4o-mini
+OPENAI_VISION_MODEL=gpt-4o-mini
+OPENAI_MAX_TOKENS_MODERATION=50
+OPENAI_MAX_TOKENS_VISION=200
+
+# Note: Screenshots are stored in Convex Storage (built-in), not UploadThing
 ```
 
 ### Convex Environment Variables

@@ -12,10 +12,14 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // Only use basePath/assetPrefix for GitHub Pages
+  // basePath for GitHub Pages
   ...(isGitHubPages && { 
     basePath: '/dreadmyst-enchanting-tool',
     assetPrefix: '/dreadmyst-enchanting-tool/',
+  }),
+  // For Vercel rewrite: use assetPrefix to load assets from the tool's domain
+  ...(isVercel && {
+    assetPrefix: 'https://dreadmyst-enchanting-tool.vercel.app',
   }),
 }
 
