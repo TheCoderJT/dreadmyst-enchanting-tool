@@ -10,7 +10,10 @@ const nextConfig = {
   // Only use static export for GitHub Pages (Vercel handles SSR natively)
   ...(isGitHubPages && { output: 'export' }),
   images: {
-    unoptimized: true,
+    // Enable optimization on Vercel, disable on GitHub Pages
+    unoptimized: isGitHubPages,
+    // Note: Screenshots from Convex Storage use regular <img> tags, not Next.js Image
+    // This optimization only applies to local images in /public
   },
   // basePath for GitHub Pages
   ...(isGitHubPages && { 
