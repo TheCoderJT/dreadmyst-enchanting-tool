@@ -18,7 +18,7 @@ type SortOption = "recent" | "luckiest" | "unluckiest";
 type QualityFilter = "all" | 1 | 2 | 3 | 4 | 5;
 type VerifiedFilter = "all" | "verified" | "unverified";
 
-const ITEMS_PER_PAGE = 50;
+const ITEMS_PER_PAGE = 25;
 
 export default function Leaderboard() {
   const [sortBy, setSortBy] = useState<SortOption>("recent");
