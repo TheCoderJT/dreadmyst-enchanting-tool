@@ -9,14 +9,18 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: 'Dreadmyst Enchanting Calculator | IsItP2W',
-  description: 'Calculate enchant success rates and optimal orb strategies for Dreadmyst. A tool by IsItP2W.com',
-  keywords: ['Dreadmyst', 'enchanting', 'calculator', 'orb', 'success rate', 'IsItP2W'],
+  metadataBase: new URL('https://isitp2w.com'),
+  title: 'Dreadmyst Orb Enchanting Tool | IsItP2W',
+  description: 'Track your Dreadmyst enchanting sessions, view success rates, and compete on the leaderboard. A tool by IsItP2W.com',
+  keywords: ['Dreadmyst', 'enchanting', 'calculator', 'orb', 'success rate', 'IsItP2W', 'tracker', 'leaderboard'],
   authors: [{ name: 'IsItP2W', url: 'https://isitp2w.com' }],
+  alternates: {
+    canonical: '/games/dreadmyst/orb-enchanting-tool',
+  },
   openGraph: {
-    title: 'Dreadmyst Enchanting Calculator',
-    description: 'Calculate enchant success rates and optimal orb strategies for Dreadmyst',
-    url: 'https://isitp2w.com/games/dreadmyst',
+    title: 'Dreadmyst Orb Enchanting Tool',
+    description: 'Track your Dreadmyst enchanting sessions, view success rates, and compete on the leaderboard.',
+    url: 'https://isitp2w.com/games/dreadmyst/orb-enchanting-tool',
     siteName: 'IsItP2W',
     type: 'website',
   },
