@@ -48,10 +48,22 @@ Update `src/app/page.tsx`:
 - Test error states
 
 ### 7. Deploy
+
+#### Deploy Convex Backend
 // turbo
 ```bash
 npx convex deploy
 ```
+
+#### Deploy Frontend (Vercel)
+Push changes to GitHub - Vercel auto-deploys from main branch:
+```bash
+git add .
+git commit -m "Add [feature name]"
+git push
+```
+
+The frontend is hosted at: `https://isitp2w.com/games/dreadmyst/orb-enchanting-tool`
 
 ## Checklist
 
@@ -63,3 +75,4 @@ npx convex deploy
 - [ ] Touch targets are 44px minimum
 - [ ] Error handling implemented
 - [ ] Loading states shown
+- [ ] Tested on Vercel deployment

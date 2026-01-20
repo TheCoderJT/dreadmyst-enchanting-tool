@@ -2,9 +2,17 @@
 
 This is a Next.js 14 App Router application with Convex backend for tracking enchanting sessions in the game Dreadmyst.
 
+## Deployment
+
+- **Frontend**: Vercel (auto-deploys from main branch)
+- **Production URL**: `https://isitp2w.com/games/dreadmyst/orb-enchanting-tool`
+- **Backend**: Convex (`sensible-whale-414.convex.cloud`)
+- **Architecture**: Vercel rewrite from main isitp2w.com site proxies to tool's Vercel deployment
+
 ## Tech Stack
 
 - **Framework**: Next.js 14 (App Router)
+- **Hosting**: Vercel (via rewrite from isitp2w.com)
 - **Backend**: Convex (serverless functions + database)
 - **Authentication**: @convex-dev/auth with Password provider
 - **Styling**: CSS Modules (mobile-first, no Tailwind inline classes)
