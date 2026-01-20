@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { auth } from "./auth";
-import { api } from "./_generated/api";
+import { api, internal } from "./_generated/api";
 
 const MAX_ENCHANT: Record<number, number> = {
   1: 1,  // White
@@ -129,7 +129,8 @@ export const startSession = mutation({
           .first();
         
         if (!affixExists) {
-          // Check partial match
+          // Fallback: Check partial match (only runs when exact match fails)
+          // This is rare since most valid affixes match exactly
           const allAffixes = await ctx.db.query("validAffixes").collect();
           const affixWords = potentialAffix.toLowerCase().split(/\s+/).filter(w => w !== "of" && w !== "the");
           const hasMatch = allAffixes.some(a => {
@@ -341,6 +342,15 @@ export const logAttempt = mutation({
         orbsUsedByType,
       });
 
+      // Update global stats (incremental - O(1) instead of recalculating)
+      await ctx.scheduler.runAfter(0, internal.stats.incrementCompletedItem, {
+        itemQuality: session.itemQuality,
+        totalAttempts: newTotalAttempts,
+        totalSuccesses: newTotalSuccesses,
+        totalOrbsUsed: newTotalAttempts,
+        isVerified: false,
+      });
+
       // Update user profile stats
       if (profile) {
         const newTotalItems = profile.totalItemsCompleted + 1;
@@ -415,22 +425,36 @@ export const getActiveSession = query({
   },
 });
 
-// Get user's completed sessions
+// Get user's completed sessions - OPTIMIZED: Server-side pagination
 export const getUserCompletedSessions = query({
-  args: {},
-  handler: async (ctx) => {
+  args: {
+    limit: v.optional(v.number()),
+    cursor: v.optional(v.number()), // completedAt timestamp for cursor-based pagination
+  },
+  handler: async (ctx, args) => {
     const userId = await auth.getUserId(ctx);
     if (!userId) {
-      return [];
+      return { items: [], hasMore: false };
     }
 
-    const completed = await ctx.db
+    const limit = args.limit ?? 50;
+
+    // Use cursor-based pagination for efficiency
+    let query = ctx.db
       .query("completedItems")
       .withIndex("by_user", (q) => q.eq("userId", userId))
-      .order("desc")
-      .collect();
+      .order("desc");
 
-    return completed;
+    const completed = await query.take(limit + 1); // Fetch one extra to check if there's more
+
+    const hasMore = completed.length > limit;
+    const items = hasMore ? completed.slice(0, limit) : completed;
+
+    return {
+      items,
+      hasMore,
+      nextCursor: hasMore && items.length > 0 ? items[items.length - 1].completedAt : null,
+    };
   },
 });
 
@@ -610,6 +634,9 @@ export const getOrCreateProfile = mutation({
         overallSuccessRate: 0,
       });
       profile = await ctx.db.get(profileId);
+      
+      // Increment global user count
+      await ctx.scheduler.runAfter(0, internal.stats.incrementUserCount, {});
     } else if (args.displayName && args.displayName !== profile.displayName) {
       await ctx.db.patch(profile._id, {
         displayName: args.displayName,
@@ -752,6 +779,15 @@ export const deleteCompletedItem = mutation({
         console.log("Could not delete storage file:", e);
       }
     }
+
+    // Update global stats (decrement)
+    await ctx.scheduler.runAfter(0, internal.stats.decrementCompletedItem, {
+      itemQuality: completedItem.itemQuality,
+      totalAttempts: completedItem.totalAttempts,
+      totalSuccesses: completedItem.totalSuccesses,
+      totalOrbsUsed: completedItem.totalOrbsUsed,
+      wasVerified: completedItem.isVerified || false,
+    });
 
     // Delete the completed item
     await ctx.db.delete(args.completedItemId);

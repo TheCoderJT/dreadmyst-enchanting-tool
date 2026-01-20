@@ -55,44 +55,30 @@ export const getUnluckiest = query({
   },
 });
 
-// Get community stats (public)
+// Get community stats (public) - OPTIMIZED: Uses pre-computed globalStats
 export const getCommunityStats = query({
   args: {},
   handler: async (ctx) => {
-    // Get all completed items for stats
-    const allCompletions = await ctx.db
-      .query("completedItems")
-      .collect();
+    // Get pre-computed global stats (O(1) instead of O(n) full table scan)
+    const globalStats = await ctx.db
+      .query("globalStats")
+      .withIndex("by_key", (q) => q.eq("key", "global"))
+      .first();
 
-    // Get all user profiles
-    const allProfiles = await ctx.db
+    // Only fetch top players for luckiest/most dedicated (small indexed queries)
+    const topBySuccessRate = await ctx.db
       .query("userProfiles")
-      .collect();
-
-    const totalUsers = allProfiles.length;
-    const totalItemsMaxed = allCompletions.length;
-    const totalVerified = allCompletions.filter(c => c.isVerified).length;
-
-    // Calculate global stats
-    let totalAttempts = 0;
-    let totalSuccesses = 0;
-    let totalOrbsUsed = 0;
-
-    for (const completion of allCompletions) {
-      totalAttempts += completion.totalAttempts;
-      totalSuccesses += completion.totalSuccesses;
-      totalOrbsUsed += completion.totalOrbsUsed;
-    }
-
-    const globalSuccessRate = totalAttempts > 0
-      ? (totalSuccesses / totalAttempts) * 100
-      : 0;
+      .withIndex("by_items_completed")
+      .order("desc")
+      .take(50);
 
     // Find luckiest player (min 3 items completed)
     let luckiestPlayer = null;
     let highestSuccessRate = 0;
+    let mostDedicated = null;
+    let mostItems = 0;
 
-    for (const profile of allProfiles) {
+    for (const profile of topBySuccessRate) {
       if (profile.totalItemsCompleted >= 3 && profile.overallSuccessRate > highestSuccessRate) {
         highestSuccessRate = profile.overallSuccessRate;
         luckiestPlayer = {
@@ -101,13 +87,6 @@ export const getCommunityStats = query({
           itemsCompleted: profile.totalItemsCompleted,
         };
       }
-    }
-
-    // Find most dedicated player
-    let mostDedicated = null;
-    let mostItems = 0;
-
-    for (const profile of allProfiles) {
       if (profile.totalItemsCompleted > mostItems) {
         mostItems = profile.totalItemsCompleted;
         mostDedicated = {
@@ -118,24 +97,26 @@ export const getCommunityStats = query({
       }
     }
 
-    // Stats by item quality
-    const qualityStats: Record<number, { count: number; totalAttempts: number; totalSuccesses: number }> = {};
-    
-    for (const completion of allCompletions) {
-      if (!qualityStats[completion.itemQuality]) {
-        qualityStats[completion.itemQuality] = { count: 0, totalAttempts: 0, totalSuccesses: 0 };
-      }
-      qualityStats[completion.itemQuality].count++;
-      qualityStats[completion.itemQuality].totalAttempts += completion.totalAttempts;
-      qualityStats[completion.itemQuality].totalSuccesses += completion.totalSuccesses;
-    }
+    // Use pre-computed stats or fallback to defaults
+    const totalUsers = globalStats?.totalUsers ?? 0;
+    const totalItemsMaxed = globalStats?.totalCompletedItems ?? 0;
+    const totalVerified = globalStats?.totalVerifiedItems ?? 0;
+    const totalAttempts = globalStats?.totalAttempts ?? 0;
+    const totalSuccesses = globalStats?.totalSuccesses ?? 0;
+    const totalOrbsUsed = globalStats?.totalOrbsUsed ?? 0;
 
-    const qualityBreakdown = Object.entries(qualityStats).map(([quality, stats]) => ({
-      quality: Number(quality),
-      itemsCompleted: stats.count,
-      avgAttempts: stats.count > 0 ? stats.totalAttempts / stats.count : 0,
-      successRate: stats.totalAttempts > 0 ? (stats.totalSuccesses / stats.totalAttempts) * 100 : 0,
-    }));
+    const globalSuccessRate = totalAttempts > 0
+      ? (totalSuccesses / totalAttempts) * 100
+      : 0;
+
+    // Build quality breakdown from pre-computed stats
+    const qualityBreakdown = globalStats ? [
+      { quality: 1, itemsCompleted: globalStats.qualityCounts.white, avgAttempts: globalStats.qualityCounts.white > 0 ? globalStats.qualityAttempts.white / globalStats.qualityCounts.white : 0, successRate: globalStats.qualityAttempts.white > 0 ? (globalStats.qualitySuccesses.white / globalStats.qualityAttempts.white) * 100 : 0 },
+      { quality: 2, itemsCompleted: globalStats.qualityCounts.radiant, avgAttempts: globalStats.qualityCounts.radiant > 0 ? globalStats.qualityAttempts.radiant / globalStats.qualityCounts.radiant : 0, successRate: globalStats.qualityAttempts.radiant > 0 ? (globalStats.qualitySuccesses.radiant / globalStats.qualityAttempts.radiant) * 100 : 0 },
+      { quality: 3, itemsCompleted: globalStats.qualityCounts.blessed, avgAttempts: globalStats.qualityCounts.blessed > 0 ? globalStats.qualityAttempts.blessed / globalStats.qualityCounts.blessed : 0, successRate: globalStats.qualityAttempts.blessed > 0 ? (globalStats.qualitySuccesses.blessed / globalStats.qualityAttempts.blessed) * 100 : 0 },
+      { quality: 4, itemsCompleted: globalStats.qualityCounts.holy, avgAttempts: globalStats.qualityCounts.holy > 0 ? globalStats.qualityAttempts.holy / globalStats.qualityCounts.holy : 0, successRate: globalStats.qualityAttempts.holy > 0 ? (globalStats.qualitySuccesses.holy / globalStats.qualityAttempts.holy) * 100 : 0 },
+      { quality: 5, itemsCompleted: globalStats.qualityCounts.godly, avgAttempts: globalStats.qualityCounts.godly > 0 ? globalStats.qualityAttempts.godly / globalStats.qualityCounts.godly : 0, successRate: globalStats.qualityAttempts.godly > 0 ? (globalStats.qualitySuccesses.godly / globalStats.qualityAttempts.godly) * 100 : 0 },
+    ].filter(q => q.itemsCompleted > 0) : [];
 
     return {
       totalUsers,

@@ -74,7 +74,10 @@ export default function EnchantTracker() {
 
   const activeSession = useQuery(api.sessions.getActiveSession);
   const userProfile = useQuery(api.sessions.getUserProfile);
-  const completedSessions = useQuery(api.sessions.getUserCompletedSessions);
+  // OPTIMIZED: Server-side pagination - fetch only what we need
+  const completedSessionsData = useQuery(api.sessions.getUserCompletedSessions, { limit: completedDisplayLimit });
+  const completedSessions = completedSessionsData?.items;
+  const hasMoreCompleted = completedSessionsData?.hasMore ?? false;
   const itemValidation = useQuery(api.validation.validateItemName, 
     itemName.trim() ? { itemName: itemName.trim() } : "skip"
   );
@@ -612,8 +615,9 @@ export default function EnchantTracker() {
                   }
                 });
               
-              const displayedItems = filteredItems.slice(0, completedDisplayLimit);
-              const hasMore = filteredItems.length > completedDisplayLimit;
+              const displayedItems = filteredItems;
+              // Use server-side hasMore flag (already fetched with limit)
+              const hasMore = hasMoreCompleted;
 
               return (
             <div className={styles.historySection}>
@@ -752,7 +756,7 @@ export default function EnchantTracker() {
                   onClick={() => setCompletedDisplayLimit(prev => prev + 15)}
                   className={styles.loadMoreButton}
                 >
-                  Load More ({filteredItems.length - completedDisplayLimit} remaining)
+                  Load More
                 </button>
               )}
               

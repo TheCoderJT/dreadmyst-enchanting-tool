@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { query, mutation } from "./_generated/server";
 import { getAuthUserId } from "@convex-dev/auth/server";
+import { internal } from "./_generated/api";
 
 // Helper to check if user is admin or moderator
 async function requireAdmin(ctx: any) {
@@ -62,7 +63,7 @@ export const isAdmin = query({
   },
 });
 
-// Get all users with their profiles for admin dashboard
+// Get all users with their profiles for admin dashboard - OPTIMIZED: Batch fetching
 export const getAllUsers = query({
   args: {
     limit: v.optional(v.number()),
@@ -73,58 +74,77 @@ export const getAllUsers = query({
 
     const limit = args.limit ?? 100;
 
-    // Get all users from the users table first
-    let users;
     if (args.filterBanned) {
-      // For banned filter, we need to check userProfiles
+      // For banned filter, query profiles directly (already has all data we need)
       const bannedProfiles = await ctx.db
         .query("userProfiles")
         .withIndex("by_banned", (q) => q.eq("isBanned", true))
         .take(limit);
       
-      const bannedUserIds = bannedProfiles.map(profile => profile.userId);
-      users = await Promise.all(
-        bannedUserIds.map(userId => ctx.db.get(userId))
-      );
-      users = users.filter(user => user !== null);
-    } else {
-      users = await ctx.db
-        .query("users")
-        .take(limit);
+      // Batch fetch users for email
+      const userIds = bannedProfiles.map(p => p.userId);
+      const users = await Promise.all(userIds.map(id => ctx.db.get(id)));
+      const userMap = new Map(users.filter(Boolean).map(u => [u!._id, u!]));
+
+      return bannedProfiles.map(profile => ({
+        _id: profile.userId,
+        displayName: profile.displayName || "Not Set",
+        email: userMap.get(profile.userId)?.email || "Unknown",
+        role: profile.role || "user",
+        totalItemsCompleted: profile.totalItemsCompleted || 0,
+        totalAttempts: profile.totalAttempts || 0,
+        totalSuccesses: profile.totalSuccesses || 0,
+        overallSuccessRate: profile.overallSuccessRate || 0,
+        isBanned: profile.isBanned || false,
+        banReason: profile.banReason,
+        bannedAt: profile.bannedAt,
+        bannedUntil: profile.bannedUntil,
+        bannedBy: profile.bannedBy,
+        savedOrbInventory: profile.savedOrbInventory,
+      }));
     }
 
-    // Get user profiles for each user (if they exist)
-    const usersWithDetails = await Promise.all(
-      users.map(async (user) => {
-        const profile = await ctx.db
+    // Get all registered users first (from users table)
+    const users = await ctx.db
+      .query("users")
+      .take(limit);
+
+    // Batch fetch all profiles for these users
+    const profiles = await Promise.all(
+      users.map(user => 
+        ctx.db
           .query("userProfiles")
           .withIndex("by_user", (q) => q.eq("userId", user._id))
-          .first();
-
-        return {
-          _id: user._id,
-          displayName: profile?.displayName || "Not Set",
-          email: user?.email || "Unknown",
-          role: profile?.role || "user",
-          totalItemsCompleted: profile?.totalItemsCompleted || 0,
-          totalAttempts: profile?.totalAttempts || 0,
-          totalSuccesses: profile?.totalSuccesses || 0,
-          overallSuccessRate: profile?.overallSuccessRate || 0,
-          isBanned: profile?.isBanned || false,
-          banReason: profile?.banReason,
-          bannedAt: profile?.bannedAt,
-          bannedUntil: profile?.bannedUntil,
-          bannedBy: profile?.bannedBy,
-          savedOrbInventory: profile?.savedOrbInventory,
-        };
-      })
+          .first()
+      )
+    );
+    const profileMap = new Map(
+      profiles.filter(Boolean).map(p => [p!.userId, p!])
     );
 
-    return usersWithDetails;
+    return users.map(user => {
+      const profile = profileMap.get(user._id);
+      return {
+        _id: user._id,
+        displayName: profile?.displayName || "Not Set",
+        email: user.email || "Unknown",
+        role: profile?.role || "user",
+        totalItemsCompleted: profile?.totalItemsCompleted || 0,
+        totalAttempts: profile?.totalAttempts || 0,
+        totalSuccesses: profile?.totalSuccesses || 0,
+        overallSuccessRate: profile?.overallSuccessRate || 0,
+        isBanned: profile?.isBanned || false,
+        banReason: profile?.banReason,
+        bannedAt: profile?.bannedAt,
+        bannedUntil: profile?.bannedUntil,
+        bannedBy: profile?.bannedBy,
+        savedOrbInventory: profile?.savedOrbInventory,
+      };
+    });
   },
 });
 
-// Get all completed items for moderation review
+// Get all completed items for moderation review - OPTIMIZED: Batch fetching
 export const getAllCompletedItems = query({
   args: {
     limit: v.optional(v.number()),
@@ -150,26 +170,29 @@ export const getAllCompletedItems = query({
         .take(limit);
     }
 
-    // Get user details for each item
-    const itemsWithUsers = await Promise.all(
-      items.map(async (item) => {
-        const profile = await ctx.db
+    // Batch fetch all user profiles at once (instead of N+1 queries)
+    const uniqueUserIds = Array.from(new Set(items.map(item => item.userId)));
+    const profiles = await Promise.all(
+      uniqueUserIds.map(userId => 
+        ctx.db
           .query("userProfiles")
-          .withIndex("by_user", (q) => q.eq("userId", item.userId))
-          .first();
-        return {
-          ...item,
-          userDisplayName: profile?.displayName || "Unknown",
-          userIsBanned: profile?.isBanned || false,
-        };
-      })
+          .withIndex("by_user", (q) => q.eq("userId", userId))
+          .first()
+      )
+    );
+    const profileMap = new Map(
+      profiles.filter(Boolean).map(p => [p!.userId, p!])
     );
 
-    return itemsWithUsers;
+    return items.map(item => ({
+      ...item,
+      userDisplayName: profileMap.get(item.userId)?.displayName || "Unknown",
+      userIsBanned: profileMap.get(item.userId)?.isBanned || false,
+    }));
   },
 });
 
-// Get moderation action history
+// Get moderation action history - OPTIMIZED: Batch fetching
 export const getModerationHistory = query({
   args: {
     limit: v.optional(v.number()),
@@ -195,26 +218,30 @@ export const getModerationHistory = query({
         .take(limit);
     }
 
-    // Get moderator and target user details
-    const actionsWithDetails = await Promise.all(
-      actions.map(async (action) => {
-        const moderatorProfile = await ctx.db
+    // Batch fetch all unique user profiles at once (instead of 2N queries)
+    const allUserIds = new Set<string>();
+    for (const action of actions) {
+      allUserIds.add(action.moderatorId);
+      allUserIds.add(action.targetUserId);
+    }
+    
+    const profiles = await Promise.all(
+      Array.from(allUserIds).map(userId => 
+        ctx.db
           .query("userProfiles")
-          .withIndex("by_user", (q) => q.eq("userId", action.moderatorId))
-          .first();
-        const targetProfile = await ctx.db
-          .query("userProfiles")
-          .withIndex("by_user", (q) => q.eq("userId", action.targetUserId))
-          .first();
-        return {
-          ...action,
-          moderatorName: moderatorProfile?.displayName || "Unknown",
-          targetName: targetProfile?.displayName || "Unknown",
-        };
-      })
+          .withIndex("by_user", (q) => q.eq("userId", userId as any))
+          .first()
+      )
+    );
+    const profileMap = new Map(
+      profiles.filter(Boolean).map(p => [p!.userId, p!])
     );
 
-    return actionsWithDetails;
+    return actions.map(action => ({
+      ...action,
+      moderatorName: profileMap.get(action.moderatorId)?.displayName || "Unknown",
+      targetName: profileMap.get(action.targetUserId)?.displayName || "Unknown",
+    }));
   },
 });
 
@@ -364,6 +391,15 @@ export const deleteCompletedItemAdmin = mutation({
       });
     }
 
+    // Update global stats (decrement)
+    await ctx.scheduler.runAfter(0, internal.stats.decrementCompletedItem, {
+      itemQuality: item.itemQuality,
+      totalAttempts: item.totalAttempts,
+      totalSuccesses: item.totalSuccesses,
+      totalOrbsUsed: item.totalOrbsUsed,
+      wasVerified: item.isVerified || false,
+    });
+
     // Log the moderation action
     await ctx.db.insert("moderationActions", {
       moderatorId,
@@ -477,43 +513,37 @@ export const getUserWarnings = query({
   },
 });
 
-// Get dashboard stats for admin
+// Get dashboard stats for admin - OPTIMIZED: Uses pre-computed globalStats + indexed counts
 export const getAdminStats = query({
   args: {},
   handler: async (ctx) => {
     await requireAdmin(ctx);
 
+    // Get pre-computed global stats (O(1) lookup)
+    const globalStats = await ctx.db
+      .query("globalStats")
+      .withIndex("by_key", (q: any) => q.eq("key", "global"))
+      .first();
+
+    // These are small indexed queries, not full table scans
     const [
-      totalUsers,
-      bannedUsers,
-      totalCompletedItems,
-      verifiedItems,
+      bannedProfiles,
       inProgressSessions,
       pausedSessions,
       recentActions,
     ] = await Promise.all([
-      ctx.db.query("users").collect().then((u) => u.length),
       ctx.db
         .query("userProfiles")
         .withIndex("by_banned", (q) => q.eq("isBanned", true))
-        .collect()
-        .then((p) => p.length),
-      ctx.db.query("completedItems").collect().then((i) => i.length),
-      ctx.db
-        .query("completedItems")
-        .withIndex("by_verified", (q) => q.eq("isVerified", true))
-        .collect()
-        .then((i) => i.length),
+        .take(1000), // Just need count, take reasonable limit
       ctx.db
         .query("enchantSessions")
         .withIndex("by_status", (q) => q.eq("status", "in_progress"))
-        .collect()
-        .then((s) => s.length),
+        .take(1000),
       ctx.db
         .query("enchantSessions")
         .withIndex("by_status", (q) => q.eq("status", "paused"))
-        .collect()
-        .then((s) => s.length),
+        .take(1000),
       ctx.db
         .query("moderationActions")
         .withIndex("by_timestamp")
@@ -522,12 +552,12 @@ export const getAdminStats = query({
     ]);
 
     return {
-      totalUsers,
-      bannedUsers,
-      totalCompletedItems,
-      verifiedItems,
-      inProgressSessions,
-      pausedSessions,
+      totalUsers: globalStats?.totalUsers ?? 0,
+      bannedUsers: bannedProfiles.length,
+      totalCompletedItems: globalStats?.totalCompletedItems ?? 0,
+      verifiedItems: globalStats?.totalVerifiedItems ?? 0,
+      inProgressSessions: inProgressSessions.length,
+      pausedSessions: pausedSessions.length,
       recentActionsCount: recentActions.length,
     };
   },

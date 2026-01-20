@@ -49,9 +49,19 @@ export default function Leaderboard() {
     } | null;
   }>({ isOpen: false, itemName: "", finalLevel: 0, totalAttempts: 0, totalSuccesses: 0, totalFailures: 0, successRate: 0, orbsUsedByType: null });
 
-  const recentCompletions = useQuery(api.leaderboard.getRecentCompletions, { limit: displayLimit });
-  const topBySuccessRate = useQuery(api.leaderboard.getTopBySuccessRate, { limit: displayLimit });
-  const unluckiestCompletions = useQuery(api.leaderboard.getUnluckiest, { limit: displayLimit });
+  // OPTIMIZED: Only fetch the data needed for current sort option (instead of all 3)
+  const recentCompletions = useQuery(
+    api.leaderboard.getRecentCompletions, 
+    sortBy === "recent" ? { limit: displayLimit } : "skip"
+  );
+  const topBySuccessRate = useQuery(
+    api.leaderboard.getTopBySuccessRate, 
+    sortBy === "luckiest" ? { limit: displayLimit } : "skip"
+  );
+  const unluckiestCompletions = useQuery(
+    api.leaderboard.getUnluckiest, 
+    sortBy === "unluckiest" ? { limit: displayLimit } : "skip"
+  );
   const communityStats = useQuery(api.leaderboard.getCommunityStats);
   const topPlayers = useQuery(api.leaderboard.getTopPlayers, { limit: 10 });
 

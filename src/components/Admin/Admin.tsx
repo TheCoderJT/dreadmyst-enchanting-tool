@@ -20,12 +20,12 @@ export default function Admin() {
   const [showWarnModal, setShowWarnModal] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState<Id<"completedItems"> | null>(null);
 
-  // Queries
+  // Queries - OPTIMIZED: Only fetch data for active tab
   const adminCheck = useQuery(api.admin.isAdmin);
-  const stats = useQuery(api.admin.getAdminStats);
-  const users = useQuery(api.admin.getAllUsers, { limit: 100 });
-  const completedItems = useQuery(api.admin.getAllCompletedItems, { limit: 100 });
-  const moderationHistory = useQuery(api.admin.getModerationHistory, { limit: 50 });
+  const stats = useQuery(api.admin.getAdminStats, activeTab === "dashboard" ? {} : "skip");
+  const users = useQuery(api.admin.getAllUsers, activeTab === "users" ? { limit: 100 } : "skip");
+  const completedItems = useQuery(api.admin.getAllCompletedItems, activeTab === "submissions" ? { limit: 100 } : "skip");
+  const moderationHistory = useQuery(api.admin.getModerationHistory, activeTab === "history" ? { limit: 50 } : "skip");
 
   // Mutations
   const banUser = useMutation(api.admin.banUser);

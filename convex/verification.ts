@@ -397,12 +397,20 @@ export const updateVerificationStatus = mutation({
     // Get the URL for the screenshot
     const screenshotUrl = await ctx.storage.getUrl(args.storageId);
 
+    // Only increment verified count if this is a new verification (wasn't verified before)
+    const wasVerified = item.isVerified;
+
     await ctx.db.patch(args.completedItemId, {
       isVerified: args.verified,
       verifiedAt: args.verified ? Date.now() : undefined,
       screenshotUrl: screenshotUrl || undefined,
       screenshotStorageId: args.storageId,
     });
+
+    // Update global stats if verification status changed to verified
+    if (args.verified && !wasVerified) {
+      await ctx.scheduler.runAfter(0, internal.stats.incrementVerified, {});
+    }
 
     // Also update the session if it exists
     if (item.sessionId) {
@@ -630,11 +638,19 @@ export const updateVerificationStatusWithUrl = mutation({
       throw new Error("Item not found");
     }
 
+    // Only increment verified count if this is a new verification (wasn't verified before)
+    const wasVerified = item.isVerified;
+
     await ctx.db.patch(args.completedItemId, {
       isVerified: args.verified,
       verifiedAt: args.verified ? Date.now() : undefined,
       screenshotUrl: args.imageUrl,
     });
+
+    // Update global stats if verification status changed to verified
+    if (args.verified && !wasVerified) {
+      await ctx.scheduler.runAfter(0, internal.stats.incrementVerified, {});
+    }
 
     // Also update the session if it exists
     if (item.sessionId) {

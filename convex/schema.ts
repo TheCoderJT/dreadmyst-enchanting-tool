@@ -151,6 +151,41 @@ const schema = defineSchema({
     .index("by_target", ["targetUserId"])
     .index("by_timestamp", ["timestamp"])
     .index("by_action", ["action"]),
+
+  // Pre-computed global statistics (updated incrementally)
+  globalStats: defineTable({
+    key: v.literal("global"),
+    totalUsers: v.number(),
+    totalCompletedItems: v.number(),
+    totalVerifiedItems: v.number(),
+    totalAttempts: v.number(),
+    totalSuccesses: v.number(),
+    totalOrbsUsed: v.number(),
+    // Quality breakdown counts
+    qualityCounts: v.object({
+      white: v.number(),
+      radiant: v.number(),
+      blessed: v.number(),
+      holy: v.number(),
+      godly: v.number(),
+    }),
+    qualityAttempts: v.object({
+      white: v.number(),
+      radiant: v.number(),
+      blessed: v.number(),
+      holy: v.number(),
+      godly: v.number(),
+    }),
+    qualitySuccesses: v.object({
+      white: v.number(),
+      radiant: v.number(),
+      blessed: v.number(),
+      holy: v.number(),
+      godly: v.number(),
+    }),
+    lastUpdated: v.number(),
+  })
+    .index("by_key", ["key"]),
 });
 
 export default schema;

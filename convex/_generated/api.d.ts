@@ -15,6 +15,7 @@ import type * as http from "../http.js";
 import type * as leaderboard from "../leaderboard.js";
 import type * as moderation from "../moderation.js";
 import type * as sessions from "../sessions.js";
+import type * as stats from "../stats.js";
 import type * as validation from "../validation.js";
 import type * as verification from "../verification.js";
 
@@ -32,6 +33,7 @@ declare const fullApi: ApiFromModules<{
   leaderboard: typeof leaderboard;
   moderation: typeof moderation;
   sessions: typeof sessions;
+  stats: typeof stats;
   validation: typeof validation;
   verification: typeof verification;
 }>;

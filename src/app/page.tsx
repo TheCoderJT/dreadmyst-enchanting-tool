@@ -51,8 +51,8 @@ export default function Home() {
   const [orbQuality, setOrbQuality] = useState<OrbQuality>(OrbQuality.Divine);
   const [currentLevel, setCurrentLevel] = useState<number>(0);
 
-  // Check if user is admin/moderator
-  const adminCheck = useQuery(api.admin.isAdmin);
+  // Check if user is admin/moderator - skip when not authenticated
+  const adminCheck = useQuery(api.admin.isAdmin, isAuthenticated ? {} : "skip");
 
   // Persist active tab in URL hash
   useEffect(() => {
