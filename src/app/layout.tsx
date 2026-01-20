@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { ConvexClientProvider } from './ConvexClientProvider';
+import MigrationBanner from '@/components/MigrationBanner/MigrationBanner';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -34,6 +35,7 @@ export default function RootLayout({
   return (
     <html lang="en" style={{ margin: 0, padding: 0 }}>
       <body style={{ margin: 0, padding: 0 }}>
+        <MigrationBanner />
         <ConvexClientProvider>{children}</ConvexClientProvider>
       </body>
     </html>

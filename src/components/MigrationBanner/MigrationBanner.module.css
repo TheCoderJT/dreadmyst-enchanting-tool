@@ -1,0 +1,115 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: var(--bg-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.container {
+  text-align: center;
+  padding: 2rem;
+  max-width: 500px;
+}
+
+.icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: bounce 1s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 1rem 0;
+}
+
+.message {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  margin: 0 0 1.5rem 0;
+  line-height: 1.6;
+}
+
+.newUrl {
+  display: inline-block;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--brand-primary);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  margin-bottom: 1.5rem;
+  transition: var(--transition-fast);
+}
+
+.newUrl:hover {
+  background: var(--bg-tertiary);
+}
+
+.countdown {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin: 0 0 1.5rem 0;
+}
+
+.countdownNumber {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--brand-primary);
+}
+
+.button {
+  display: inline-block;
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: white;
+  background: var(--brand-primary);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: var(--transition-fast);
+  min-width: 200px;
+  min-height: 48px;
+}
+
+.button:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.note {
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+  margin: 1.5rem 0 0 0;
+}
+
+@media (min-width: 768px) {
+  .title {
+    font-size: 3rem;
+  }
+
+  .message {
+    font-size: 1.25rem;
+  }
+
+  .icon {
+    font-size: 5rem;
+  }
+}
