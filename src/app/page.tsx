@@ -14,8 +14,6 @@ import Leaderboard from '@/components/Leaderboard';
 import Logo from '@/components/Logo/Logo';
 import Admin from '@/components/Admin/Admin';
 import Guidelines from '@/components/Guidelines/Guidelines';
-import TermsOfService from '@/components/TermsOfService/TermsOfService';
-import PrivacyPolicy from '@/components/PrivacyPolicy/PrivacyPolicy';
 import { useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import {
@@ -57,7 +55,7 @@ export default function Home() {
   // Persist active tab in URL hash
   useEffect(() => {
     const hash = window.location.hash.slice(1);
-    const validTabs = ['calculator', 'simulator', 'tracker', 'leaderboard', 'guidelines', 'admin', 'terms', 'privacy'];
+    const validTabs = ['calculator', 'simulator', 'tracker', 'leaderboard', 'guidelines', 'admin'];
     if (hash && validTabs.includes(hash)) {
       setActiveTab(hash);
     }
@@ -434,17 +432,6 @@ export default function Home() {
         </div>
       )}
 
-      {activeTab === 'terms' && (
-        <div className={styles.leaderboardFullWidth}>
-          <TermsOfService />
-        </div>
-      )}
-
-      {activeTab === 'privacy' && (
-        <div className={styles.leaderboardFullWidth}>
-          <PrivacyPolicy />
-        </div>
-      )}
 
       <footer className={styles.footer}>
         <div className={styles.footerContent}>
@@ -468,9 +455,6 @@ export default function Home() {
                   <a href="https://isitp2w.com/games/dreadmyst" target="_blank" rel="noopener noreferrer" className={styles.footerLink}>
                     Dreadmyst on IsItP2W
                   </a>
-                  <a href="https://docs.google.com/spreadsheets/d/1GxuInbx8yLYp4mnmaHgCMmRkSamrE_cBCYlzvg1pCqM/edit?usp=sharing" target="_blank" rel="noopener noreferrer" className={styles.footerLink}>
-                    Game Info Spreadsheet
-                  </a>
                   <a href="https://discord.gg/VTjve676D2" target="_blank" rel="noopener noreferrer" className={styles.footerLink}>
                     Discord Server
                   </a>
@@ -481,12 +465,12 @@ export default function Home() {
               <div className={styles.footerColumn}>
                 <h4 className={styles.footerHeading}>Legal</h4>
                 <div className={styles.footerLinks}>
-                  <button onClick={() => handleTabChange('terms')} className={styles.footerLinkButton}>
+                  <a href="https://isitp2w.com/terms" target="_blank" rel="noopener noreferrer" className={styles.footerLinkButton}>
                     Terms of Service
-                  </button>
-                  <button onClick={() => handleTabChange('privacy')} className={styles.footerLinkButton}>
+                  </a>
+                  <a href="https://isitp2w.com/privacy" target="_blank" rel="noopener noreferrer" className={styles.footerLinkButton}>
                     Privacy Policy
-                  </button>
+                  </a>
                   <button onClick={() => handleTabChange('guidelines')} className={styles.footerLinkButton}>
                     Submission Guidelines
                   </button>
@@ -498,6 +482,8 @@ export default function Home() {
                 <h4 className={styles.footerHeading}>Contact & Credits</h4>
                 <p className={styles.footerText}>
                   Enchanting data by <strong>@sithadmin</strong>
+                  <br />
+                  <a href="https://docs.google.com/spreadsheets/d/1GxuInbx8yLYp4mnmaHgCMmRkSamrE_cBCYlzvg1pCqM/edit?usp=sharing" target="_blank" rel="noopener noreferrer" className={styles.footerInlineLink}>Game Info Spreadsheet</a>
                 </p>
                 <p className={styles.footerText}>
                   Issues? <a href="https://isitp2w.com/contact" target="_blank" rel="noopener noreferrer" className={styles.footerInlineLink}>Contact Us</a>
@@ -510,7 +496,7 @@ export default function Home() {
           </div>
 
           <div className={styles.footerBottom}>
-            <p>© 2026 IsItP2W.com — Jordan D Turner (JT Digital Systems)</p>
+            <p>© 2026 IsItP2W.com is an independent directory built by Jordan D Turner (JT Digital Systems) in Alberta.</p>
           </div>
         </div>
       </footer>

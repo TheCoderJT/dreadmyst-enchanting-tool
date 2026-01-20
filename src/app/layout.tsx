@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import Script from 'next/script';
 import './globals.css';
 import { ConvexClientProvider } from './ConvexClientProvider';
 import MigrationBanner from '@/components/MigrationBanner/MigrationBanner';
@@ -34,9 +35,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" style={{ margin: 0, padding: 0 }}>
-      <body style={{ margin: 0, padding: 0 }}>
+      <body style={{ margin: 0, padding: 0, minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <Script
+          defer
+          src="https://cloud.umami.is/script.js"
+          data-website-id="5be9bbb2-aa1b-4f52-808a-89e6e5c9ff8d"
+          strategy="afterInteractive"
+        />
         <MigrationBanner />
-        <ConvexClientProvider>{children}</ConvexClientProvider>
+        <ConvexClientProvider>
+          {children}
+        </ConvexClientProvider>
       </body>
     </html>
   );
