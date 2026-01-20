@@ -16,6 +16,11 @@ export default function MigrationBanner() {
     setIsGitHubPages(isGH);
 
     if (isGH) {
+      // Add noindex meta tag to tell Google to de-index this page
+      const metaRobots = document.createElement('meta');
+      metaRobots.name = 'robots';
+      metaRobots.content = 'noindex, nofollow';
+      document.head.appendChild(metaRobots);
       // Start countdown
       const timer = setInterval(() => {
         setCountdown((prev) => {
