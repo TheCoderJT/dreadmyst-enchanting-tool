@@ -2,6 +2,7 @@
   width: 100%;
   max-width: 56.25rem;
   overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .header {
@@ -702,9 +703,6 @@
 }
 
 .completedTableRow {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
   padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--border-primary);
   background: var(--bg-secondary);
@@ -873,33 +871,27 @@
   color: #ef4444;
 }
 
-/* Mobile: Stack info in rows */
-@media (max-width: 767px) {
-  .completedTableRow {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    grid-template-areas:
-      "item level"
-      "stats stats"
-      "actions actions";
-    gap: 0.5rem;
-  }
-
-  .colItem { grid-area: item; }
-  .colLevel { grid-area: level; align-self: start; }
-  .colRate, .colAttempts, .colOrbs, .colDate {
-    display: inline;
-  }
-  .colActions { grid-area: actions; }
-
-  .completedTableRow::after {
-    content: none;
-  }
-
-  /* Create a stats row */
-  .colRate::before { content: "Rate: "; color: var(--text-tertiary); font-size: 0.75rem; }
-  .colAttempts::before { content: "Attempts: "; color: var(--text-tertiary); font-size: 0.75rem; }
+/* Mobile-first: Stack info in rows (default) */
+.completedTableRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "item level"
+    "stats stats"
+    "actions actions";
+  gap: 0.5rem;
 }
+
+.colItem { grid-area: item; }
+.colLevel { grid-area: level; align-self: start; }
+.colRate, .colAttempts, .colOrbs, .colDate {
+  display: inline;
+}
+.colActions { grid-area: actions; }
+
+/* Create a stats row */
+.colRate::before { content: "Rate: "; color: var(--text-tertiary); font-size: 0.75rem; }
+.colAttempts::before { content: "Attempts: "; color: var(--text-tertiary); font-size: 0.75rem; }
 
 /* Desktop: Table grid */
 @media (min-width: 768px) {
