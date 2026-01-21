@@ -10,6 +10,8 @@
 
 import type * as admin from "../admin.js";
 import type * as auth from "../auth.js";
+import type * as cleanup from "../cleanup.js";
+import type * as crons from "../crons.js";
 import type * as example from "../example.js";
 import type * as http from "../http.js";
 import type * as leaderboard from "../leaderboard.js";
@@ -28,6 +30,8 @@ import type {
 declare const fullApi: ApiFromModules<{
   admin: typeof admin;
   auth: typeof auth;
+  cleanup: typeof cleanup;
+  crons: typeof crons;
   example: typeof example;
   http: typeof http;
   leaderboard: typeof leaderboard;
