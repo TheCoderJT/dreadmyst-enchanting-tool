@@ -42,12 +42,26 @@ export default function AuthForm({ onSuccess }: AuthFormProps) {
       }
     } catch (err: any) {
       console.error("Auth error:", err);
-      const errorMessage = err?.message || err?.toString() || "Unknown error";
-      setError(
-        flow === "signIn"
-          ? `Sign in failed: ${errorMessage}`
-          : `Sign up failed: ${errorMessage}`
-      );
+      const errorMessage = err?.message || err?.toString() || "";
+      
+      // Map technical errors to user-friendly messages
+      if (errorMessage.includes("InvalidSecret") || errorMessage.includes("Invalid")) {
+        setError(flow === "signIn" 
+          ? "Invalid email or password. Please try again."
+          : "Could not create account. Please check your details."
+        );
+      } else if (errorMessage.includes("not found") || errorMessage.includes("NotFound")) {
+        setError("Account not found. Please check your email or sign up.");
+      } else if (errorMessage.includes("already exists") || errorMessage.includes("AlreadyExists")) {
+        setError("An account with this email already exists. Please sign in.");
+      } else if (errorMessage.includes("network") || errorMessage.includes("Network")) {
+        setError("Network error. Please check your connection and try again.");
+      } else {
+        setError(flow === "signIn"
+          ? "Unable to sign in. Please try again."
+          : "Unable to create account. Please try again."
+        );
+      }
     } finally {
       setLoading(false);
     }
