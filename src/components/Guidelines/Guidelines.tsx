@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import styles from "./Guidelines.module.css";
 
 export default function Guidelines() {
@@ -32,10 +33,13 @@ export default function Guidelines() {
           </ul>
           <div className={styles.exampleContainer}>
             <p className={styles.exampleLabel}>Example Screenshot:</p>
-            <img 
+            <Image 
               src="/example-tooltip.png"
               alt="Example item tooltip showing Radiant Cap of Warm Vim +3"
               className={styles.exampleImage}
+              width={400}
+              height={300}
+              style={{ width: 'auto', height: 'auto', maxWidth: '100%' }}
             />
             <p className={styles.exampleCaption}>
               This is the correct format - just the item tooltip with the name and +level visible.
