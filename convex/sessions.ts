@@ -546,8 +546,18 @@ export const resumeSession = mutation({
       throw new Error("Session is not paused");
     }
 
+    // Get user's current saved orb inventory from profile
+    const profile = await ctx.db
+      .query("userProfiles")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .first();
+
+    // Sync orb inventory from profile if available
+    const updatedInventory = profile?.savedOrbInventory || session.orbInventory;
+
     await ctx.db.patch(args.sessionId, {
       status: "in_progress",
+      orbInventory: updatedInventory,
     });
 
     return { success: true };
