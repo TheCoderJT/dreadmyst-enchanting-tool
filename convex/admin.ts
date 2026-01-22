@@ -513,37 +513,48 @@ export const getUserWarnings = query({
   },
 });
 
-// Get dashboard stats for admin - OPTIMIZED: Uses pre-computed globalStats + indexed counts
+// Get dashboard stats for admin - REAL-TIME: Direct counts for accuracy, indexed for performance
 export const getAdminStats = query({
   args: {},
   handler: async (ctx) => {
     await requireAdmin(ctx);
 
-    // Get pre-computed global stats (O(1) lookup)
-    const globalStats = await ctx.db
-      .query("globalStats")
-      .withIndex("by_key", (q: any) => q.eq("key", "global"))
-      .first();
-
-    // These are small indexed queries, not full table scans
+    // All queries run in parallel for speed
+    // Using .collect() for small tables and indexed queries for filtered data
     const [
+      allUsers,
       bannedProfiles,
+      allCompletedItems,
+      verifiedItems,
       inProgressSessions,
       pausedSessions,
       recentActions,
     ] = await Promise.all([
+      // Direct count from users table - always accurate, table is small
+      ctx.db.query("users").collect(),
+      // Indexed query for banned users
       ctx.db
         .query("userProfiles")
         .withIndex("by_banned", (q) => q.eq("isBanned", true))
-        .take(1000), // Just need count, take reasonable limit
+        .collect(),
+      // Direct count from completedItems - accurate real-time
+      ctx.db.query("completedItems").collect(),
+      // Indexed query for verified items
+      ctx.db
+        .query("completedItems")
+        .withIndex("by_verified", (q) => q.eq("isVerified", true))
+        .collect(),
+      // Indexed query for in-progress sessions
       ctx.db
         .query("enchantSessions")
         .withIndex("by_status", (q) => q.eq("status", "in_progress"))
-        .take(1000),
+        .collect(),
+      // Indexed query for paused sessions
       ctx.db
         .query("enchantSessions")
         .withIndex("by_status", (q) => q.eq("status", "paused"))
-        .take(1000),
+        .collect(),
+      // Recent moderation actions
       ctx.db
         .query("moderationActions")
         .withIndex("by_timestamp")
@@ -552,10 +563,10 @@ export const getAdminStats = query({
     ]);
 
     return {
-      totalUsers: globalStats?.totalUsers ?? 0,
+      totalUsers: allUsers.length,
       bannedUsers: bannedProfiles.length,
-      totalCompletedItems: globalStats?.totalCompletedItems ?? 0,
-      verifiedItems: globalStats?.totalVerifiedItems ?? 0,
+      totalCompletedItems: allCompletedItems.length,
+      verifiedItems: verifiedItems.length,
       inProgressSessions: inProgressSessions.length,
       pausedSessions: pausedSessions.length,
       recentActionsCount: recentActions.length,
