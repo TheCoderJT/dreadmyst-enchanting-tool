@@ -152,12 +152,12 @@ export const rebuildGlobalStats = internalMutation({
   handler: async (ctx) => {
     // Get all completed items
     const allCompletions = await ctx.db.query("completedItems").collect();
-    // Count from users table (registered users), not userProfiles
-    const allUsers = await ctx.db.query("users").collect();
+    // Count from userProfiles table (users who have set up profiles)
+    const allUserProfiles = await ctx.db.query("userProfiles").collect();
 
     const stats = {
       key: "global" as const,
-      totalUsers: allUsers.length,
+      totalUsers: allUserProfiles.length,
       totalCompletedItems: allCompletions.length,
       totalVerifiedItems: allCompletions.filter(c => c.isVerified).length,
       totalAttempts: 0,

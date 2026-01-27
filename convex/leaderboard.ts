@@ -97,8 +97,9 @@ export const getCommunityStats = query({
       }
     }
 
-    // Use pre-computed stats or fallback to defaults
-    const totalUsers = globalStats?.totalUsers ?? 0;
+    // Count actual user profiles (enchanters who have set up profiles)
+    const userProfileCount = await ctx.db.query("userProfiles").collect();
+    const totalUsers = userProfileCount.length;
     const totalItemsMaxed = globalStats?.totalCompletedItems ?? 0;
     const totalVerified = globalStats?.totalVerifiedItems ?? 0;
     const totalAttempts = globalStats?.totalAttempts ?? 0;
